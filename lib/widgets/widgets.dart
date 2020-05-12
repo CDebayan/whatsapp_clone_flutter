@@ -58,6 +58,8 @@ class Footer extends StatelessWidget {
   }
 }
 
+////////////////////////////////////////////////////////////////////////////////////
+
 class LinkText extends StatelessWidget {
   final List<TextSpanModel> list;
 
@@ -93,6 +95,61 @@ class LinkText extends StatelessWidget {
     return RichText(
       textAlign: TextAlign.center,
       text: TextSpan(children: textSpanList),
+    );
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////////
+
+class EditText extends StatelessWidget {
+  final String hint;
+  final TextEditingController controller;
+  final String errorText;
+  final Widget prefixIcon;
+  final Widget suffixIcon;
+  final bool enabled;
+  final TextAlign textAlign;
+  final ValueChanged<String> onChanged;
+  final TextInputType keyboardType;
+  final EdgeInsetsGeometry contentPadding;
+
+  EditText(
+      {@required this.hint,
+      @required this.controller,
+      this.prefixIcon,
+      this.suffixIcon,
+      this.errorText,
+      this.enabled,
+      this.textAlign = TextAlign.left,
+      this.onChanged,
+      this.keyboardType = TextInputType.text,
+      this.contentPadding = const EdgeInsets.only(bottom: -20)});
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: <Widget>[
+        TextField(
+          controller: controller,
+          enabled: enabled,
+          onChanged: onChanged,
+          textAlign: textAlign,
+          keyboardType: keyboardType,
+          decoration: InputDecoration(
+            hintText: hint,
+            errorText: errorText,
+            contentPadding: contentPadding,
+          ),
+        ),
+        Positioned(
+            bottom: 8,
+            left: 0,
+            child: prefixIcon != null ? prefixIcon : Container()),
+        Positioned(
+            bottom: 8,
+            right: 0,
+            child: suffixIcon != null ? suffixIcon : Container())
+      ],
     );
   }
 }
