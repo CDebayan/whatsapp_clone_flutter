@@ -24,7 +24,7 @@ class WelcomeScreen extends StatelessWidget {
               Text(
                 "Welcome to WhatsApp",
                 style:
-                    TextStyle(color: Constants.primaryDarkColor, fontSize: 30),
+                    TextStyle(color: Constants.colorPrimaryDark, fontSize: 30),
               ),
               SizedBox(
                 height: 50,

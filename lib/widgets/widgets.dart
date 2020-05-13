@@ -18,7 +18,7 @@ class Button extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialButton(
-      color: Constants.primaryColor,
+      color: Constants.colorPrimary,
       child: Padding(
         padding: padding,
         child: Text(
@@ -41,7 +41,7 @@ class Footer extends StatelessWidget {
       children: <Widget>[
         Text(
           "from",
-          style: TextStyle(color: Constants.defaultTextColor),
+          style: TextStyle(color: Constants.colorDefaultText),
         ),
         SizedBox(
           height: 8,
@@ -49,7 +49,7 @@ class Footer extends StatelessWidget {
         Text(
           "FACEBOOK",
           style: TextStyle(
-            color: Constants.primaryColor,
+            color: Constants.colorPrimary,
             fontSize: 16,
           ),
         ),
@@ -75,7 +75,7 @@ class LinkText extends StatelessWidget {
             text: item.text,
             style: TextStyle(
               color:
-                  item.color != null ? item.color : Constants.defaultTextColor,
+                  item.color != null ? item.color : Constants.colorDefaultText,
             ),
           ),
         );
@@ -109,6 +109,8 @@ class EditText extends StatelessWidget {
   final Widget suffixIcon;
   final bool enabled;
   final TextAlign textAlign;
+  final bool readOnly;
+  final GestureTapCallback onTap;
   final ValueChanged<String> onChanged;
   final TextInputType keyboardType;
   final EdgeInsetsGeometry contentPadding;
@@ -121,6 +123,8 @@ class EditText extends StatelessWidget {
       this.errorText,
       this.enabled,
       this.textAlign = TextAlign.left,
+      this.readOnly = false,
+      this.onTap,
       this.onChanged,
       this.keyboardType = TextInputType.text,
       this.contentPadding = const EdgeInsets.only(bottom: -20)});
@@ -134,11 +138,16 @@ class EditText extends StatelessWidget {
           enabled: enabled,
           onChanged: onChanged,
           textAlign: textAlign,
+          readOnly: readOnly,
           keyboardType: keyboardType,
+          onTap: onTap,
           decoration: InputDecoration(
             hintText: hint,
             errorText: errorText,
             contentPadding: contentPadding,
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Constants.colorPrimaryDark),
+            ),
           ),
         ),
         Positioned(

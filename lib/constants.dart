@@ -11,9 +11,9 @@ class Constants {
 
 
   //region color name
-  static const Color primaryColor = Color(0xff2bb140);
-  static const Color primaryDarkColor = Color(0xff128C7E);
-  static const Color defaultTextColor = Color(0xff757575);
+  static const Color colorPrimary = Color(0xff2bb140);
+  static const Color colorPrimaryDark = Color(0xff128C7E);
+  static const Color colorDefaultText = Color(0xff757575);
   static const Color colorBlue = Color(0xff34B7F1);
   static const Color colorWhite = Color(0xffFFFFFF);
   static const Color colorBlack = Color(0xff000000);

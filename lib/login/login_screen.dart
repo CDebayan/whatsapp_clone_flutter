@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:whatsappcloneflutter/constants.dart';
+import 'package:whatsappcloneflutter/funtionality/functionality.dart';
+import 'package:whatsappcloneflutter/login/select_country_screen.dart';
 import 'package:whatsappcloneflutter/widgets/model/text_span_model.dart';
 import 'package:whatsappcloneflutter/widgets/widgets.dart';
 
@@ -13,42 +15,71 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: transparentAppBar(title: "Enter your phone number"),
       body: SafeArea(
         child: Column(
           children: <Widget>[
-            LinkText(_textList()),
-            Container(
-              width: 300,
-              child: Column(
-                children: <Widget>[
-                  EditText(
-                    hint: "Choose a country",
-                    controller: _countryController,
-                    textAlign: TextAlign.center,
-                    suffixIcon: Icon(Icons.add, size: 16,color: Constants.defaultTextColor,),
-                    contentPadding: const EdgeInsets.only(bottom: -20,left: 16,right: 16),
-                  ),
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: EditText(
-                          hint: "",
-                          controller: _countryCodeController,
-                          prefixIcon: Icon(Icons.add, size: 16,color: Constants.defaultTextColor,),
-                        ),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: <Widget>[
+                    LinkText(_textList()),
+                    Container(
+                      width: 300,
+                      child: Column(
+                        children: <Widget>[
+                          EditText(
+                            hint: "Choose a country",
+                            controller: _countryController,
+                            textAlign: TextAlign.center,
+                            readOnly: true,
+                            suffixIcon: Icon(
+                              Icons.arrow_drop_down,
+                              size: 16,
+                              color: Constants.colorPrimaryDark,
+                            ),
+                            contentPadding: const EdgeInsets.only(
+                                bottom: -20, left: 16, right: 16),
+                            onTap: () {
+                              Navigator.of(context)
+                                  .pushNamed(SelectCountryScreen.routeName);
+                            },
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: EditText(
+                                  hint: "",
+                                  controller: _countryCodeController,
+                                  prefixIcon: Icon(
+                                    Icons.add,
+                                    size: 16,
+                                    color: Constants.colorDefaultText,
+                                  ),
+                                  contentPadding: const EdgeInsets.only(
+                                      bottom: -20, left: 20),
+                                ),
+                              ),
+                              SizedBox(width: 16),
+                              Expanded(
+                                  flex: 3,
+                                  child: EditText(
+                                    hint: "phone number",
+                                    controller: _phoneController,
+                                  )),
+                            ],
+                          ),
+                        ],
                       ),
-                      SizedBox(width: 16),
-                      Expanded(
-                          flex: 3,
-                          child: EditText(
-                            hint: "phone number",
-                            controller: _phoneController,
-                          )),
-                    ],
-                  ),
-                ],
+                    )
+                  ],
+                ),
               ),
-            )
+            ),
+            Button(text: "Next", onPressed: () {}),
+            SizedBox(
+              height: 24,
+            ),
           ],
         ),
       ),
@@ -70,5 +101,17 @@ class LoginScreen extends StatelessWidget {
       ),
     );
     return list;
+  }
+
+  AppBar transparentAppBar({String title = ""}) {
+    return AppBar(
+      title: Center(
+          child: Text(
+        title,
+        style: TextStyle(color: Constants.colorPrimaryDark),
+      )),
+      backgroundColor: Colors.transparent,
+      elevation: 0.0,
+    );
   }
 }
