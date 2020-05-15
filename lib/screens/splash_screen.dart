@@ -1,7 +1,8 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:whatsappcloneflutter/constants.dart';
-import 'package:whatsappcloneflutter/welcome/welcome_screen.dart';
+import 'package:whatsappcloneflutter/screens/welcome_screen.dart';
 import 'package:whatsappcloneflutter/widgets/widgets.dart';
 
 class SplashScreen extends StatefulWidget {

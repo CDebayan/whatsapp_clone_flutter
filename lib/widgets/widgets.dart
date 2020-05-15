@@ -1,8 +1,8 @@
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:whatsappcloneflutter/constants.dart';
-import 'package:whatsappcloneflutter/widgets/model/text_span_model.dart';
+import 'package:whatsappcloneflutter/models/text_span_model.dart';
 
 class Button extends StatelessWidget {
   final String text;

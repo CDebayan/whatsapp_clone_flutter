@@ -1,11 +1,12 @@
+
 import 'package:flutter/material.dart';
 import 'package:whatsappcloneflutter/constants.dart';
 import 'package:whatsappcloneflutter/funtionality/functionality.dart';
-import 'package:whatsappcloneflutter/login/login_screen.dart';
-import 'package:whatsappcloneflutter/widgets/model/text_span_model.dart';
+import 'package:whatsappcloneflutter/models/text_span_model.dart';
+import 'package:whatsappcloneflutter/screens/login_screen.dart';
 import 'package:whatsappcloneflutter/widgets/widgets.dart';
 
-class WelcomeScreen extends StatelessWidget {
+class WelcomeScreen extends StatelessWidget with Functionality{
   static const String routeName = "WelcomeScreen";
 
   @override
