@@ -1,16 +1,30 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:whatsappcloneflutter/blocs/select_country_bloc/select_country_bloc.dart';
+import 'package:whatsappcloneflutter/blocs/select_country_bloc/select_country_event.dart';
 import 'package:whatsappcloneflutter/constants.dart';
 import 'package:whatsappcloneflutter/models/text_span_model.dart';
 import 'package:whatsappcloneflutter/screens/select_country_screen.dart';
 import 'package:whatsappcloneflutter/widgets/widgets.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   static const String routeName = "LoginScreen";
 
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _countryController = TextEditingController();
   final TextEditingController _countryCodeController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<SelectCountryBloc>(context).add(FetchCountryListEvent());
+  }
 
   @override
   Widget build(BuildContext context) {

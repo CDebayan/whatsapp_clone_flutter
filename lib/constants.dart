@@ -16,6 +16,7 @@ class Constants {
   static const Color colorDefaultText = Color(0xff757575);
   static const Color colorBlue = Color(0xff34B7F1);
   static const Color colorWhite = Color(0xffFFFFFF);
+  static const Color colorOffWhite = Color(0xfffafafa);
   static const Color colorBlack = Color(0xff000000);
 //endregion
 
