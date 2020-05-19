@@ -7,15 +7,20 @@ import 'package:whatsappcloneflutter/functionality.dart';
 import 'package:whatsappcloneflutter/models/country_list_model.dart';
 import 'package:whatsappcloneflutter/services/dio_services.dart';
 
-class SelectCountryBloc extends Bloc<SelectCountryEvent, SelectCountryState> with Functionality {
+class SelectCountryBloc extends Bloc<SelectCountryEvent, SelectCountryState>
+    with Functionality {
   final _appbarController = StreamController<bool>.broadcast();
   bool _appbarStatus = false;
+  List<CountryModel> _countryList;
 
   Stream<bool> get showSearch => _appbarController.stream;
+
   bool get appbarStatus => _appbarStatus;
-  void updateAppbarStatus(){
+
+  void updateAppbarStatus() {
     _appbarStatus = !appbarStatus;
     _appbarController.sink.add(appbarStatus);
+    add(SearchCountryEvent(text : ""));
   }
 
   @override
@@ -31,6 +36,7 @@ class SelectCountryBloc extends Bloc<SelectCountryEvent, SelectCountryState> wit
           isValidString(result.status) &&
           result.status == "true") {
         if (isValidList(result.countryList)) {
+          _countryList = result.countryList;
           yield LoadedState(countryList: result.countryList);
         } else {
           yield EmptyListState();
@@ -38,8 +44,28 @@ class SelectCountryBloc extends Bloc<SelectCountryEvent, SelectCountryState> wit
       } else {
         yield ErrorState();
       }
+    } else if (event is SearchCountryEvent) {
+      if (isValidList(_countryList)) {
+        if (event.text.isNotEmpty) {
+          List<CountryModel> _filteredCountryList = List<CountryModel>();
+          _filteredCountryList = _countryList.where((element) {
+            String text = event.text;
+            String name = element.name;
+            String code = element.callingCodes[0];
+            return name.toLowerCase().contains(text.toLowerCase()) || code.toLowerCase().contains(text.toLowerCase());
+          }).toList();
+          yield LoadedState(countryList: _filteredCountryList);
+        } else {
+          yield LoadedState(countryList: _countryList);
+        }
+      }
     }
   }
+
+  //              return event.text.toLowerCase().contains(element.name.toLowerCase()) ||
+//                event.text
+//                    .toLowerCase()
+//                    .contains(element.callingCodes[0].toLowerCase());
 
   void dispose() {
     _appbarController?.close();

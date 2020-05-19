@@ -117,7 +117,7 @@ class EditText extends StatelessWidget {
 
   EditText(
       {@required this.hint,
-      @required this.controller,
+      this.controller,
       this.prefixIcon,
       this.suffixIcon,
       this.errorText,

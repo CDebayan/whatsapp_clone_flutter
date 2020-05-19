@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:whatsappcloneflutter/blocs/select_country_bloc/select_country_bloc.dart';
 import 'package:whatsappcloneflutter/constants.dart';
 import 'package:whatsappcloneflutter/screens/login_screen.dart';
@@ -14,6 +15,7 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    FlutterStatusbarcolor.setStatusBarColor(Constants.colorPrimaryDark);
     return MultiBlocProvider(
       providers: [
         BlocProvider<SelectCountryBloc>(create: (BuildContext context) => SelectCountryBloc()),

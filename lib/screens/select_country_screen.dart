@@ -17,7 +17,6 @@ class SelectCountryScreen extends StatelessWidget with Functionality {
 
   @override
   Widget build(BuildContext context) {
-    FlutterStatusbarcolor.setStatusBarColor(Constants.colorPrimaryDark);
     return WillPopScope(
       onWillPop: () async {
         bool appbarStatus = BlocProvider.of<SelectCountryBloc>(context).appbarStatus;
@@ -55,16 +54,16 @@ class SelectCountryScreen extends StatelessWidget with Functionality {
     if (isValidList(countryList)) {
       return ListView.builder(
           itemCount: countryList.length,
-          itemBuilder: (_, index) {
+          itemBuilder: (context, index) {
             CountryModel countryModel = countryList[index];
             return Column(
               children: <Widget>[
                 ListTile(
-                  leading: SvgPicture.network(
-                    countryModel.flag,
-                    height: 20,
-                    width: 20,
-                  ),
+//                  leading: SvgPicture.network(
+//                    countryModel.flag,
+//                    height: 20,
+//                    width: 20,
+//                  ),
                   title: Text(countryModel.name),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -86,6 +85,7 @@ class SelectCountryScreen extends StatelessWidget with Functionality {
                   selected: countryModel.selected != null
                       ? countryModel.selected
                       : false,
+
                 ),
                 Divider(
                   indent: 16,
@@ -109,7 +109,9 @@ PreferredSizeWidget appBar(BuildContext context) {
       initialData: false,
       builder: (context, snapshot) {
         if (snapshot.data) {
-          return EditText();
+          return EditText(hint: "",onChanged: (value){
+            BlocProvider.of<SelectCountryBloc>(context).add(SearchCountryEvent(text: value));
+          },);
         }
         return Text(
           "Choose a country",

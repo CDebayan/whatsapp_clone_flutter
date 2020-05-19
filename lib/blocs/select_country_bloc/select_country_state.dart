@@ -16,6 +16,9 @@ class LoadingState extends SelectCountryState {}
 class LoadedState extends SelectCountryState {
   final List<CountryModel> countryList;
   LoadedState({@required this.countryList});
+
+  @override
+  List<Object> get props => [countryList];
 }
 
 class EmptyListState extends SelectCountryState{}
