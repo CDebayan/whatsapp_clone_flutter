@@ -19,7 +19,8 @@ class SelectCountryScreen extends StatelessWidget with Functionality {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        bool appbarStatus = BlocProvider.of<SelectCountryBloc>(context).appbarStatus;
+        bool appbarStatus =
+            BlocProvider.of<SelectCountryBloc>(context).appbarStatus;
         if (appbarStatus) {
           BlocProvider.of<SelectCountryBloc>(context).updateAppbarStatus();
           return false;
@@ -30,20 +31,20 @@ class SelectCountryScreen extends StatelessWidget with Functionality {
         appBar: appBar(context),
         body: SafeArea(
           child: Container(
-            child: BlocConsumer<SelectCountryBloc, SelectCountryState>(
-                builder: (_, state) {
-                  if (state is LoadingState) {
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  } else if (state is LoadedState) {
-                    return _buildCountryList(state.countryList);
-                  } else if (state is ErrorState) {
-                    return Container();
-                  }
+            child: BlocBuilder<SelectCountryBloc, SelectCountryState>(
+              builder: (_, state) {
+                if (state is LoadingState) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (state is LoadedState) {
+                  return _buildCountryList(state.countryList);
+                } else if (state is ErrorState) {
                   return Container();
-                },
-                listener: (_, state) {}),
+                }
+                return Container();
+              },
+            ),
           ),
         ),
       ),
@@ -64,6 +65,10 @@ class SelectCountryScreen extends StatelessWidget with Functionality {
 //                    height: 20,
 //                    width: 20,
 //                  ),
+                  onTap: () {
+                    BlocProvider.of<SelectCountryBloc>(context).add(SelectItemEvent(countryModel: countryModel));
+                    Navigator.of(context).pop();
+                  },
                   title: Text(countryModel.name),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -78,14 +83,13 @@ class SelectCountryScreen extends StatelessWidget with Functionality {
                         width: 8,
                       ),
                       (countryModel.selected == null || !countryModel.selected)
-                          ? Container()
+                          ? Container(width: 24,)
                           : Icon(Icons.check),
                     ],
                   ),
                   selected: countryModel.selected != null
                       ? countryModel.selected
                       : false,
-
                 ),
                 Divider(
                   indent: 16,
@@ -109,9 +113,13 @@ PreferredSizeWidget appBar(BuildContext context) {
       initialData: false,
       builder: (context, snapshot) {
         if (snapshot.data) {
-          return EditText(hint: "",onChanged: (value){
-            BlocProvider.of<SelectCountryBloc>(context).add(SearchCountryEvent(text: value));
-          },);
+          return EditText(
+            hint: "",
+            onChanged: (value) {
+              BlocProvider.of<SelectCountryBloc>(context)
+                  .add(SearchCountryEvent(text: value));
+            },
+          );
         }
         return Text(
           "Choose a country",

@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:whatsappcloneflutter/models/country_list_model.dart';
 
 abstract class SelectCountryEvent extends Equatable {
   const SelectCountryEvent();
@@ -16,5 +17,13 @@ class SearchCountryEvent extends SelectCountryEvent{
 
   @override
   List<Object> get props => [text];
+}
+
+class SelectItemEvent extends SelectCountryEvent{
+  final CountryModel countryModel;
+  SelectItemEvent({@required this.countryModel});
+
+  @override
+  List<Object> get props => [countryModel];
 }
 

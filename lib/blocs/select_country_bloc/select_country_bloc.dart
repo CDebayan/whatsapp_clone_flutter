@@ -12,9 +12,8 @@ class SelectCountryBloc extends Bloc<SelectCountryEvent, SelectCountryState>
   final _appbarController = StreamController<bool>.broadcast();
   bool _appbarStatus = false;
   List<CountryModel> _countryList;
-
   Stream<bool> get showSearch => _appbarController.stream;
-
+  List<CountryModel> _filteredCountryList;
   bool get appbarStatus => _appbarStatus;
 
   void updateAppbarStatus() {
@@ -37,6 +36,7 @@ class SelectCountryBloc extends Bloc<SelectCountryEvent, SelectCountryState>
           result.status == "true") {
         if (isValidList(result.countryList)) {
           _countryList = result.countryList;
+          _filteredCountryList = _countryList;
           yield LoadedState(countryList: result.countryList);
         } else {
           yield EmptyListState();
@@ -47,7 +47,6 @@ class SelectCountryBloc extends Bloc<SelectCountryEvent, SelectCountryState>
     } else if (event is SearchCountryEvent) {
       if (isValidList(_countryList)) {
         if (event.text.isNotEmpty) {
-          List<CountryModel> _filteredCountryList = List<CountryModel>();
           _filteredCountryList = _countryList.where((element) {
             String text = event.text;
             String name = element.name;
@@ -59,13 +58,19 @@ class SelectCountryBloc extends Bloc<SelectCountryEvent, SelectCountryState>
           yield LoadedState(countryList: _countryList);
         }
       }
+    }else if(event is SelectItemEvent){
+      for(var item in _countryList){
+        if(event.countryModel.name == item.name){
+          item.selected = true;
+        }else{
+          item.selected = false;
+        }
+      }
+      // TODO need to fix, BlocBuilder not listening when previous and current event is same
+      yield LoadingState();
+      yield LoadedState(countryList: _filteredCountryList);
     }
   }
-
-  //              return event.text.toLowerCase().contains(element.name.toLowerCase()) ||
-//                event.text
-//                    .toLowerCase()
-//                    .contains(element.callingCodes[0].toLowerCase());
 
   void dispose() {
     _appbarController?.close();
