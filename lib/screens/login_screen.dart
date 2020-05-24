@@ -17,7 +17,6 @@ import 'package:whatsappcloneflutter/widgets/widgets.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String routeName = "LoginScreen";
-
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -26,6 +25,8 @@ class _LoginScreenState extends State<LoginScreen> with Functionality {
   final TextEditingController _countryController = TextEditingController();
   final TextEditingController _countryCodeController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
+
+  final _phoneFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -89,6 +90,9 @@ class _LoginScreenState extends State<LoginScreen> with Functionality {
             CountryModel countryModel = state.countryModel;
             if (isValidObject(countryModel)) {
               _countryController.text = countryModel.name;
+              if(isValidString(countryModel.name) && countryModel.name != "invalid country code"){
+                FocusScope.of(context).requestFocus(_phoneFocusNode);
+              }
               if (isValidList(countryModel.callingCodes) && isValidString(countryModel.callingCodes[0])) {
                 _countryCodeController.text = countryModel.callingCodes[0];
               }
@@ -134,8 +138,10 @@ class _LoginScreenState extends State<LoginScreen> with Functionality {
                 Expanded(
                     flex: 3,
                     child: EditText(
+                      focusNode: _phoneFocusNode,
                       hint: "phone number",
                       controller: _phoneController,
+                      keyboardType: TextInputType.phone,
                     )),
               ],
             ),

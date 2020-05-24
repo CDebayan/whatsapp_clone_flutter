@@ -37,23 +37,23 @@ class Footer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
         child: Column(
-      children: <Widget>[
-        Text(
-          "from",
-          style: TextStyle(color: Constants.colorDefaultText),
-        ),
-        SizedBox(
-          height: 8,
-        ),
-        Text(
-          "FACEBOOK",
-          style: TextStyle(
-            color: Constants.colorPrimary,
-            fontSize: 16,
-          ),
-        ),
-      ],
-    ));
+          children: <Widget>[
+            Text(
+              "from",
+              style: TextStyle(color: Constants.colorDefaultText),
+            ),
+            SizedBox(
+              height: 8,
+            ),
+            Text(
+              "FACEBOOK",
+              style: TextStyle(
+                color: Constants.colorPrimary,
+                fontSize: 16,
+              ),
+            ),
+          ],
+        ));
   }
 }
 
@@ -74,7 +74,7 @@ class LinkText extends StatelessWidget {
             text: item.text,
             style: TextStyle(
               color:
-                  item.color != null ? item.color : Constants.colorDefaultText,
+              item.color != null ? item.color : Constants.colorDefaultText,
             ),
           ),
         );
@@ -85,7 +85,8 @@ class LinkText extends StatelessWidget {
             style: TextStyle(
               color: item.color != null ? item.color : Constants.colorBlue,
             ),
-            recognizer: TapGestureRecognizer()..onTap = item.onTap,
+            recognizer: TapGestureRecognizer()
+              ..onTap = item.onTap,
           ),
         );
       }
@@ -101,6 +102,7 @@ class LinkText extends StatelessWidget {
 ////////////////////////////////////////////////////////////////////////////////////
 
 class EditText extends StatelessWidget {
+  final FocusNode focusNode;
   final String hint;
   final TextEditingController controller;
   final String errorText;
@@ -115,26 +117,27 @@ class EditText extends StatelessWidget {
   final TextInputType keyboardType;
   final EdgeInsetsGeometry contentPadding;
 
-  EditText(
-      {@required this.hint,
-      this.controller,
-      this.prefixIcon,
-      this.suffixIcon,
-      this.errorText,
-      this.enabled,
-      this.textAlign = TextAlign.left,
-      this.readOnly = false,
-      this.onTap,
-      this.onChanged,
-      this.maxLength,
-      this.keyboardType = TextInputType.text,
-      this.contentPadding = const EdgeInsets.only(bottom: -20)});
+  EditText({@required this.hint,
+    this.controller,
+    this.focusNode,
+    this.prefixIcon,
+    this.suffixIcon,
+    this.errorText,
+    this.enabled,
+    this.textAlign = TextAlign.left,
+    this.readOnly = false,
+    this.onTap,
+    this.onChanged,
+    this.maxLength,
+    this.keyboardType = TextInputType.text,
+    this.contentPadding = const EdgeInsets.only(bottom: -20)});
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
         TextField(
+          focusNode: focusNode,
           controller: controller,
           enabled: enabled,
           onChanged: onChanged,

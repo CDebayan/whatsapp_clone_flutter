@@ -63,12 +63,14 @@ class SelectCountryBloc extends Bloc<SelectCountryEvent, SelectCountryState>
     for(int i = 0; i< _countryList.length;i++){
         _countryList[i].selected = false;
     }
-    event.countryList[event.index].selected = true;
+    event.countryModel.selected = true;
 
     if(currentState is LoadedState){
-      BlocProvider.of<LoginBloc>(event.context).add(SelectedCountryEvent(countryModel: event.countryList[event.index]));
-      yield LoadingState();
-      yield LoadedState(countryList: event.countryList);
+      if (_appbarStatus == true) {
+        updateAppbarStatus();
+      }
+      BlocProvider.of<LoginBloc>(event.context).add(SelectedCountryEvent(countryModel: event.countryModel));
+      yield LoadedState(countryList: _countryList);
     }
 
   }

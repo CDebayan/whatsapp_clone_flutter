@@ -70,7 +70,7 @@ class SelectCountryScreen extends StatelessWidget with Functionality {
 //                    width: 20,
 //                  ),
                   onTap: () {
-                    _blocInstance(context).add(SelectItemEvent(countryList: countryList,index: index,context: context));
+                    _blocInstance(context).add(SelectItemEvent(countryModel: countryModel,context: context));
                     Navigator.of(context).pop();
                   },
                   title: Text(countryModel.name),

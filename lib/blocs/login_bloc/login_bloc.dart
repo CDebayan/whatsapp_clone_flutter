@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:whatsappcloneflutter/blocs/login_bloc/login_event.dart';
 import 'package:whatsappcloneflutter/blocs/login_bloc/login_state.dart';
 import 'package:whatsappcloneflutter/blocs/select_country_bloc/select_country_bloc.dart';
+import 'package:whatsappcloneflutter/blocs/select_country_bloc/select_country_event.dart';
 import 'package:whatsappcloneflutter/functionality.dart';
 import 'package:whatsappcloneflutter/models/country_list_model.dart';
 
@@ -25,6 +26,7 @@ class LoginBloc extends Bloc<LoginEvent,LoginState> with Functionality{
         CountryModel countryModel = _countryList.singleWhere((element) {
                 return element.callingCodes[0] == event.code;
               },orElse: () => CountryModel(name: "invalid country code"));
+        BlocProvider.of<SelectCountryBloc>(event.context).add(SelectItemEvent(countryModel: countryModel,context: event.context));
         yield SelectedCountryState(countryModel: CountryModel(name: countryModel.name));
       }else{
         yield SelectedCountryState(countryModel: CountryModel(name: ""));
