@@ -180,9 +180,9 @@ class _LoginScreenState extends State<LoginScreen> with Functionality {
         // return object of type Dialog
         return AlertDialog(
           title: Text(
-            "Select number",
+            "Select number",style: TextStyle(fontWeight: FontWeight.w600),
           ),
-          contentPadding: EdgeInsets.only(top: 8, left: 8, right: 8),
+          contentPadding: EdgeInsets.only(top: 16, left: 16, right: 16),
           content: ListView.builder(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
@@ -194,18 +194,23 @@ class _LoginScreenState extends State<LoginScreen> with Functionality {
                       Icons.call,
                       color: Constants.colorPrimaryDark,
                     ),
+
+                    SizedBox(width: 16,),
+
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                              "+${sims[index].countryPhonePrefix} ${sims[index].number.substring(sims[index].number.length - 10)}"),
-                          Text(
-                              "SIM ${(sims[index].slotIndex + 1)}, ${sims[index].carrierName}"),
+                              "+${sims[index].countryPhonePrefix} ${sims[index].number.substring(sims[index].number.length - 10)}",style: TextStyle(fontSize: 16),),
+                          Text("SIM ${(sims[index].slotIndex + 1)}, ${sims[index].carrierName}",style: TextStyle(color: Constants.colorDefaultText,fontSize: 14),),
                         ],
                       ),
                     ),
-                    Radio(value: true, groupValue: 1, onChanged: (_) {})
+
+                    Radio(value: null,groupValue: null, onChanged: (value) {
+
+                    })
                   ],
                 );
               }),
@@ -213,7 +218,7 @@ class _LoginScreenState extends State<LoginScreen> with Functionality {
             FlatButton(
               child: Text(
                 "CANCEL",
-                style: TextStyle(color: Constants.colorPrimaryDark),
+                style: TextStyle(color: Constants.colorPrimaryDark,fontWeight: FontWeight.w600),
               ),
               onPressed: () {
                 Navigator.of(context).pop();
@@ -222,7 +227,7 @@ class _LoginScreenState extends State<LoginScreen> with Functionality {
             FlatButton(
               child: Text(
                 "USE",
-                style: TextStyle(color: Constants.colorPrimaryDark),
+                style: TextStyle(color: Constants.colorPrimaryDark,fontWeight: FontWeight.w600),
               ),
               onPressed: () {
                 Navigator.of(context).pop();
