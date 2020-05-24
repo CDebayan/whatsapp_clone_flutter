@@ -1,4 +1,3 @@
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:whatsappcloneflutter/constants.dart';
@@ -111,6 +110,7 @@ class EditText extends StatelessWidget {
   final TextAlign textAlign;
   final bool readOnly;
   final GestureTapCallback onTap;
+  final int maxLength;
   final ValueChanged<String> onChanged;
   final TextInputType keyboardType;
   final EdgeInsetsGeometry contentPadding;
@@ -126,6 +126,7 @@ class EditText extends StatelessWidget {
       this.readOnly = false,
       this.onTap,
       this.onChanged,
+      this.maxLength,
       this.keyboardType = TextInputType.text,
       this.contentPadding = const EdgeInsets.only(bottom: -20)});
 
@@ -141,9 +142,11 @@ class EditText extends StatelessWidget {
           readOnly: readOnly,
           keyboardType: keyboardType,
           onTap: onTap,
+          maxLength: maxLength,
           decoration: InputDecoration(
             hintText: hint,
             errorText: errorText,
+            counterText: "",
             contentPadding: contentPadding,
             enabledBorder: UnderlineInputBorder(
               borderSide: BorderSide(color: Constants.colorPrimaryDark),
@@ -161,4 +164,18 @@ class EditText extends StatelessWidget {
       ],
     );
   }
+}
+
+////////////////////////////////////////////////////////////////////////////////////
+
+AppBar transparentAppBar({String title = ""}) {
+  return AppBar(
+    centerTitle: true,
+    title: Text(
+      title,
+      style: TextStyle(color: Constants.colorPrimaryDark),
+    ),
+    backgroundColor: Colors.transparent,
+    elevation: 0.0,
+  );
 }

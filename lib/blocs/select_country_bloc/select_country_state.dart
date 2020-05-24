@@ -24,3 +24,4 @@ class LoadedState extends SelectCountryState {
 class EmptyListState extends SelectCountryState{}
 
 class ErrorState extends SelectCountryState {}
+

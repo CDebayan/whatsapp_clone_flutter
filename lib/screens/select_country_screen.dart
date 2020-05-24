@@ -20,15 +20,15 @@ class SelectCountryScreen extends StatelessWidget with Functionality {
     return WillPopScope(
       onWillPop: () async {
         bool appbarStatus =
-            BlocProvider.of<SelectCountryBloc>(context).appbarStatus;
+            _blocInstance(context).appbarStatus;
         if (appbarStatus) {
-          BlocProvider.of<SelectCountryBloc>(context).updateAppbarStatus();
+          _blocInstance(context).updateAppbarStatus();
           return false;
         }
         return true;
       },
       child: Scaffold(
-        appBar: appBar(context),
+        appBar: _appBar(context),
         body: SafeArea(
           child: Container(
             child: BlocBuilder<SelectCountryBloc, SelectCountryState>(
@@ -51,6 +51,10 @@ class SelectCountryScreen extends StatelessWidget with Functionality {
     );
   }
 
+  SelectCountryBloc _blocInstance(BuildContext context) {
+    return BlocProvider.of<SelectCountryBloc>(context);
+  }
+
   Widget _buildCountryList(List<CountryModel> countryList) {
     if (isValidList(countryList)) {
       return ListView.builder(
@@ -66,7 +70,7 @@ class SelectCountryScreen extends StatelessWidget with Functionality {
 //                    width: 20,
 //                  ),
                   onTap: () {
-                    BlocProvider.of<SelectCountryBloc>(context).add(SelectItemEvent(countryModel: countryModel));
+                    _blocInstance(context).add(SelectItemEvent(countryList: countryList,index: index,context: context));
                     Navigator.of(context).pop();
                   },
                   title: Text(countryModel.name),
@@ -83,7 +87,9 @@ class SelectCountryScreen extends StatelessWidget with Functionality {
                         width: 8,
                       ),
                       (countryModel.selected == null || !countryModel.selected)
-                          ? Container(width: 24,)
+                          ? Container(
+                              width: 24,
+                            )
                           : Icon(Icons.check),
                     ],
                   ),
@@ -101,54 +107,55 @@ class SelectCountryScreen extends StatelessWidget with Functionality {
     }
     return Container();
   }
+
+  PreferredSizeWidget _appBar(BuildContext context) {
+    return AppBar(
+      backgroundColor: Constants.colorOffWhite,
+      iconTheme: IconThemeData(color: Constants.colorPrimaryDark),
+      elevation: 1,
+      title: StreamBuilder(
+        stream: _blocInstance(context).showSearch,
+        initialData: false,
+        builder: (context, snapshot) {
+          if (snapshot.data) {
+            return EditText(
+              hint: "",
+              onChanged: (value) {
+                _blocInstance(context).add(SearchCountryEvent(text: value));
+              },
+            );
+          }
+          return Text(
+            "Choose a country",
+            style: TextStyle(color: Constants.colorPrimaryDark),
+          );
+        },
+      ),
+      actions: <Widget>[
+        StreamBuilder(
+            stream: _blocInstance(context).showSearch,
+            initialData: false,
+            builder: (context, snapshot) {
+              if (snapshot.data) {
+                return Container();
+              }
+              return Container(
+                padding: EdgeInsets.only(right: 8),
+                child: IconButton(
+                  icon: Icon(
+                    Icons.search,
+                    color: Constants.colorPrimaryDark,
+                  ),
+                  onPressed: () {
+                    _blocInstance(context).updateAppbarStatus();
+                  },
+                ),
+              );
+            })
+      ],
+    );
+  }
+
 }
 
-PreferredSizeWidget appBar(BuildContext context) {
-  return AppBar(
-    backgroundColor: Constants.colorOffWhite,
-    iconTheme: IconThemeData(color: Constants.colorPrimaryDark),
-    elevation: 1,
-    title: StreamBuilder(
-      stream: BlocProvider.of<SelectCountryBloc>(context).showSearch,
-      initialData: false,
-      builder: (context, snapshot) {
-        if (snapshot.data) {
-          return EditText(
-            hint: "",
-            onChanged: (value) {
-              BlocProvider.of<SelectCountryBloc>(context)
-                  .add(SearchCountryEvent(text: value));
-            },
-          );
-        }
-        return Text(
-          "Choose a country",
-          style: TextStyle(color: Constants.colorPrimaryDark),
-        );
-      },
-    ),
-    actions: <Widget>[
-      StreamBuilder(
-          stream: BlocProvider.of<SelectCountryBloc>(context).showSearch,
-          initialData: false,
-          builder: (context, snapshot) {
-            if (snapshot.data) {
-              return Container();
-            }
-            return Container(
-              padding: EdgeInsets.only(right: 8),
-              child: IconButton(
-                icon: Icon(
-                  Icons.search,
-                  color: Constants.colorPrimaryDark,
-                ),
-                onPressed: () {
-                  BlocProvider.of<SelectCountryBloc>(context)
-                      .updateAppbarStatus();
-                },
-              ),
-            );
-          })
-    ],
-  );
-}
+

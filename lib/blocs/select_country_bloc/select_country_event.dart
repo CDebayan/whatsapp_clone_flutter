@@ -19,11 +19,17 @@ class SearchCountryEvent extends SelectCountryEvent{
   List<Object> get props => [text];
 }
 
+
+
 class SelectItemEvent extends SelectCountryEvent{
-  final CountryModel countryModel;
-  SelectItemEvent({@required this.countryModel});
+  final List<CountryModel> countryList;
+  final int index;
+  final BuildContext context;
+  SelectItemEvent({@required this.countryList,@required this.index,@required this.context});
 
   @override
-  List<Object> get props => [countryModel];
+  List<Object> get props => [countryList,index,context];
 }
+
+
 
