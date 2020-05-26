@@ -47,12 +47,6 @@ class _LoginScreenState extends State<LoginScreen> with Functionality {
 
   @override
   Widget build(BuildContext context) {
-    _countryCodeController.addListener(() {
-      _blocInstance().add(SearchCountryByCodeEvent(
-          code: _countryCodeController.text.toString().trim(),
-          context: context));
-    });
-
     return Scaffold(
       appBar: transparentAppBar(title: "Enter your phone number"),
       body: SafeArea(
@@ -84,10 +78,12 @@ class _LoginScreenState extends State<LoginScreen> with Functionality {
                       _countryController.clear();
                       _countryCodeController.clear();
                       _showErrorDialog(state.message);
-                    }else if (state.status == "phoneError") {
+                    } else if (state.status == "phoneError") {
                       _showErrorDialog(state.message);
-                    }else if(state.status == "success"){
-                      Navigator.of(context).pushNamed(VerifyPhoneScreen.routeName);
+                    } else if (state.status == "success") {
+                      Navigator.of(context).pushNamed(
+                          VerifyPhoneScreen.routeName,
+                          arguments: "+${_countryCodeController.text.toString().trim()}${_phoneController.text.toString().trim()}");
                     }
                   }
                 },
@@ -154,6 +150,11 @@ class _LoginScreenState extends State<LoginScreen> with Functionality {
                     hint: "",
                     controller: _countryCodeController,
                     maxLength: 3,
+                    onChanged: (value) {
+                      _blocInstance().add(SearchCountryByCodeEvent(
+                          code: _countryCodeController.text.toString().trim(),
+                          context: context));
+                    },
                     prefixIcon: Icon(
                       Icons.add,
                       size: 16,
@@ -307,7 +308,10 @@ class _LoginScreenState extends State<LoginScreen> with Functionality {
     String country = _countryController.text.toString().trim();
     String phone = _phoneController.text.toString().trim();
     _blocInstance().add(ValidationEvent(
-        countryCode: countryCode, countryAlphaCode: countryAlphaCode,country: country, phone: phone));
+        countryCode: countryCode,
+        countryAlphaCode: countryAlphaCode,
+        country: country,
+        phone: phone));
   }
 
   void _showErrorDialog(String errorText) {

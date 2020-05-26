@@ -5,7 +5,7 @@ import 'package:whatsappcloneflutter/services/dio_interceptor.dart';
 
 class DioClient {
   static final Dio _dio = Dio();
-  static final String baseUrl = "http://192.168.43.237:3000/";
+  static final String baseUrl = "http://192.168.0.5:3000/";
 
   static Dio _invoke(bool otherUrl) {
     if(!otherUrl){

@@ -7,13 +7,14 @@ class VerifyPhoneScreen extends StatelessWidget {
   static const String routeName = "VerifyPhoneScreen";
 
   static BuildContext _context;
-  static String _number = "";
+  static String _phoneNo;
 
   @override
   Widget build(BuildContext context) {
     _context = context;
+    _phoneNo = ModalRoute.of(context).settings.arguments;
     return Scaffold(
-      appBar: transparentAppBar(title: "Verify"),
+      appBar: transparentAppBar(title: "Verify $_phoneNo"),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Container(
@@ -111,7 +112,7 @@ class VerifyPhoneScreen extends StatelessWidget {
     List<TextSpanModel> list = List<TextSpanModel>();
     list.add(
       TextSpanModel(
-        text: "Waiting to automatically detect an SMS sent to $_number. ",
+        text: "Waiting to automatically detect an SMS sent to $_phoneNo. ",
         color: Constants.colorBlack,
       ),
     );
