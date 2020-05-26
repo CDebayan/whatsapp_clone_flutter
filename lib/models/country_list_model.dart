@@ -32,6 +32,7 @@ class CountryListModel {
 class CountryModel {
   String flag;
   String name;
+  String alpha2Code;
   List<String> callingCodes;
   bool selected;
 
@@ -40,6 +41,7 @@ class CountryModel {
   CountryModel.fromJson(Map<String, dynamic> json) {
     flag = json['flag'];
     name = json['name'];
+    alpha2Code = json['alpha2Code'];
     callingCodes = json['callingCodes'].cast<String>();
   }
 
@@ -47,6 +49,7 @@ class CountryModel {
     final Map<String, dynamic> data = Map<String, dynamic>();
     data['flag'] = this.flag;
     data['name'] = this.name;
+    data['alpha2Code'] = this.alpha2Code;
     data['callingCodes'] = this.callingCodes;
     return data;
   }

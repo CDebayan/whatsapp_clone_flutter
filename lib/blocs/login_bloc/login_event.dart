@@ -24,3 +24,20 @@ class SelectedCountryEvent extends LoginEvent{
   @override
   List<Object> get props => [countryModel];
 }
+
+
+class ValidationEvent extends LoginEvent {
+  final String countryCode;
+  final String countryAlphaCode;
+  final String country;
+  final String phone;
+
+  ValidationEvent(
+      {@required this.countryCode,
+      @required this.countryAlphaCode,
+        @required this.country,
+        @required this.phone});
+
+  @override
+  List<Object> get props => [countryCode,countryAlphaCode,country,phone];
+}

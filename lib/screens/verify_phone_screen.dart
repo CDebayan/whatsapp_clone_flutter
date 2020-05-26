@@ -16,79 +16,93 @@ class VerifyPhoneScreen extends StatelessWidget {
       appBar: transparentAppBar(title: "Verify"),
       body: SafeArea(
         child: SingleChildScrollView(
-            child: Container(
-          padding: EdgeInsets.all(16),
-          child: Column(
-            children: <Widget>[
-              LinkText(_textList()),
-              Text(
-                "Enter 6-digit code",
-                style: TextStyle(color: Constants.colorDefaultText),
-              ),
-              Row(
-                children: <Widget>[
-                  SizedBox(
-                    width: 8,
-                  ),
-                  Icon(
-                    Icons.message,
-                    color: Constants.colorDefaultText,
-                  ),
-                  SizedBox(
-                    width: 16,
-                  ),
-                  Expanded(
-                      child: Text(
-                    "Resend SMS",
-                    style: TextStyle(
-                        color: Constants.colorDefaultText,
-                        fontWeight: FontWeight.bold),
-                  )),
-                  Text(
-                    "1:02",
-                    style: TextStyle(
+          child: Container(
+            padding: EdgeInsets.all(16),
+            child: Column(
+              children: <Widget>[
+                LinkText(_textList()),
+                TextField(),
+                SizedBox(
+                  height: 16,
+                ),
+                Text(
+                  "Enter 6-digit code",
+                  style: TextStyle(color: Constants.colorDefaultText),
+                ),
+                SizedBox(
+                  height: 24,
+                ),
+                Row(
+                  children: <Widget>[
+                    SizedBox(
+                      width: 8,
+                    ),
+                    Icon(
+                      Icons.message,
                       color: Constants.colorDefaultText,
                     ),
-                  ),
-                  SizedBox(
-                    width: 8,
-                  ),
-                ],
-              ),
-              Divider(),
-              Row(
-                children: <Widget>[
-                  SizedBox(
-                    width: 8,
-                  ),
-                  Icon(
-                    Icons.call,
-                    color: Constants.colorDefaultText,
-                  ),
-                  SizedBox(
-                    width: 16,
-                  ),
-                  Expanded(
-                      child: Text(
-                    "Call me",
-                    style: TextStyle(
+                    SizedBox(
+                      width: 16,
+                    ),
+                    Expanded(
+                        child: Text(
+                      "Resend SMS",
+                      style: TextStyle(
+                          color: Constants.colorDefaultText,
+                          fontWeight: FontWeight.bold),
+                    )),
+                    Text(
+                      "1:02",
+                      style: TextStyle(
                         color: Constants.colorDefaultText,
-                        fontWeight: FontWeight.bold),
-                  )),
-                  Text(
-                    "1:02",
-                    style: TextStyle(
+                      ),
+                    ),
+                    SizedBox(
+                      width: 8,
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 8,
+                ),
+                Divider(),
+                SizedBox(
+                  height: 8,
+                ),
+                Row(
+                  children: <Widget>[
+                    SizedBox(
+                      width: 8,
+                    ),
+                    Icon(
+                      Icons.call,
                       color: Constants.colorDefaultText,
                     ),
-                  ),
-                  SizedBox(
-                    width: 8,
-                  ),
-                ],
-              ),
-            ],
+                    SizedBox(
+                      width: 16,
+                    ),
+                    Expanded(
+                        child: Text(
+                      "Call me",
+                      style: TextStyle(
+                          color: Constants.colorDefaultText,
+                          fontWeight: FontWeight.bold),
+                    )),
+                    Text(
+                      "1:02",
+                      style: TextStyle(
+                        color: Constants.colorDefaultText,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 8,
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-        )),
+        ),
       ),
     );
   }

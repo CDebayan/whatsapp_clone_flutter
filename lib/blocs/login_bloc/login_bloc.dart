@@ -1,4 +1,6 @@
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:phone_number/phone_number.dart';
 import 'package:whatsappcloneflutter/blocs/login_bloc/login_event.dart';
 import 'package:whatsappcloneflutter/blocs/login_bloc/login_state.dart';
 import 'package:whatsappcloneflutter/blocs/select_country_bloc/select_country_bloc.dart';
@@ -16,6 +18,8 @@ class LoginBloc extends Bloc<LoginEvent,LoginState> with Functionality{
       yield* _mapSearchCountryByCodeEventToState(event);
     }else if(event is SelectedCountryEvent){
       yield SelectedCountryState(countryModel: event.countryModel);
+    }else if(event is ValidationEvent){
+      yield* _mapValidationEventToState(event);
     }
   }
 
@@ -33,6 +37,23 @@ class LoginBloc extends Bloc<LoginEvent,LoginState> with Functionality{
       }
     }else{
       yield SelectedCountryState(countryModel: CountryModel(name: ""));
+    }
+  }
+
+  Stream<LoginState> _mapValidationEventToState(ValidationEvent event) async*{
+    if (event.countryCode.isEmpty) {
+      yield ValidationState(status: "countryCodeError", message: "Invalid country code length(1-3 digits only).");
+    }else if(event.country == "invalid country code"){
+      yield ValidationState(status: "countryError", message: "Invalid country code.");
+    }else if(event.phone.isEmpty){
+      yield ValidationState(status: "phoneError", message: "Please enter your phone number.");
+    }else{
+      try {
+        final phoneValidation = await PhoneNumber().parse(event.phone, region: event.countryAlphaCode);
+        yield ValidationState(status: "success", message: "");
+      }on PlatformException catch (e) {
+        yield ValidationState(status: "phoneError", message: "Invalid phone no.");
+      }
     }
   }
 

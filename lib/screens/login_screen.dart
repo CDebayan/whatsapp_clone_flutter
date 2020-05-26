@@ -17,6 +17,7 @@ import 'package:whatsappcloneflutter/widgets/widgets.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String routeName = "LoginScreen";
+
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -27,6 +28,9 @@ class _LoginScreenState extends State<LoginScreen> with Functionality {
   final TextEditingController _phoneController = TextEditingController();
 
   final _phoneFocusNode = FocusNode();
+  final _countryCodeFocusNode = FocusNode();
+
+  String countryAlphaCode;
 
   @override
   void initState() {
@@ -44,38 +48,60 @@ class _LoginScreenState extends State<LoginScreen> with Functionality {
   @override
   Widget build(BuildContext context) {
     _countryCodeController.addListener(() {
-      _blocInstance().add(SearchCountryByCodeEvent(code: _countryCodeController.text.toString().trim(),context: context));
+      _blocInstance().add(SearchCountryByCodeEvent(
+          code: _countryCodeController.text.toString().trim(),
+          context: context));
     });
 
     return Scaffold(
       appBar: transparentAppBar(title: "Enter your phone number"),
       body: SafeArea(
-        child: Column(
-          children: <Widget>[
-            Expanded(
-              child: Column(
-                children: <Widget>[
-                  //region header
-                  LinkText(_textList()),
-                  //endregion
+        child: Container(
+          padding: EdgeInsets.all(16),
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                child: Column(
+                  children: <Widget>[
+                    //region header
+                    LinkText(_textList()),
+                    //endregion
 
-                  //region body
-                  _body()
-                  //endregion
-                ],
+                    //region body
+                    _body()
+                    //endregion
+                  ],
+                ),
               ),
-            ),
 
-            //region next button
-            Button(
-                text: "Next",
-                onPressed: () {
-                  Navigator.of(context).pushNamed(VerifyPhoneScreen.routeName);
-                }),
-            //endregion
+              //region next button
+              BlocListener<LoginBloc, LoginState>(
+                listener: (context, state) {
+                  if (state is ValidationState) {
+                    if (state.status == "countryCodeError") {
+                      _showErrorDialog(state.message);
+                    } else if (state.status == "countryError") {
+                      _countryController.clear();
+                      _countryCodeController.clear();
+                      _showErrorDialog(state.message);
+                    }else if (state.status == "phoneError") {
+                      _showErrorDialog(state.message);
+                    }else if(state.status == "success"){
+                      Navigator.of(context).pushNamed(VerifyPhoneScreen.routeName);
+                    }
+                  }
+                },
+                child: Button(
+                    text: "Next",
+                    onPressed: () {
+                      _validatePhone();
+                    }),
+              ),
+              //endregion
 
-            SizedBox(height: 24),
-          ],
+              SizedBox(height: 24),
+            ],
+          ),
         ),
       ),
     );
@@ -89,11 +115,14 @@ class _LoginScreenState extends State<LoginScreen> with Functionality {
           if (state is SelectedCountryState) {
             CountryModel countryModel = state.countryModel;
             if (isValidObject(countryModel)) {
+              countryAlphaCode = countryModel.alpha2Code;
               _countryController.text = countryModel.name;
-              if(isValidString(countryModel.name) && countryModel.name != "invalid country code"){
+              if (isValidString(countryModel.name) &&
+                  countryModel.name != "invalid country code") {
                 FocusScope.of(context).requestFocus(_phoneFocusNode);
               }
-              if (isValidList(countryModel.callingCodes) && isValidString(countryModel.callingCodes[0])) {
+              if (isValidList(countryModel.callingCodes) &&
+                  isValidString(countryModel.callingCodes[0])) {
                 _countryCodeController.text = countryModel.callingCodes[0];
               }
             }
@@ -121,6 +150,7 @@ class _LoginScreenState extends State<LoginScreen> with Functionality {
               children: <Widget>[
                 Expanded(
                   child: EditText(
+                    focusNode: _countryCodeFocusNode,
                     hint: "",
                     controller: _countryCodeController,
                     maxLength: 3,
@@ -167,20 +197,21 @@ class _LoginScreenState extends State<LoginScreen> with Functionality {
 
     List<SimCard> mobileNumbers = await MobileNumber.getSimCards;
     print(mobileNumbers);
-    _showDialog(mobileNumbers);
+    _showSimListDialog(mobileNumbers);
   }
 
   //endregion
 
   //region showDialog
-  void _showDialog(List<SimCard> sims) {
+  void _showSimListDialog(List<SimCard> sims) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
           title: Text(
-            "Select number",style: TextStyle(fontWeight: FontWeight.w600),
+            "Select number",
+            style: TextStyle(fontWeight: FontWeight.w600),
           ),
           contentPadding: EdgeInsets.only(top: 16, left: 16, right: 16),
           content: ListView.builder(
@@ -194,23 +225,27 @@ class _LoginScreenState extends State<LoginScreen> with Functionality {
                       Icons.call,
                       color: Constants.colorPrimaryDark,
                     ),
-
-                    SizedBox(width: 16,),
-
+                    SizedBox(
+                      width: 16,
+                    ),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                              "+${sims[index].countryPhonePrefix} ${sims[index].number.substring(sims[index].number.length - 10)}",style: TextStyle(fontSize: 16),),
-                          Text("SIM ${(sims[index].slotIndex + 1)}, ${sims[index].carrierName}",style: TextStyle(color: Constants.colorDefaultText,fontSize: 14),),
+                            "+${sims[index].countryPhonePrefix} ${sims[index].number.substring(sims[index].number.length - 10)}",
+                            style: TextStyle(fontSize: 16),
+                          ),
+                          Text(
+                            "SIM ${(sims[index].slotIndex + 1)}, ${sims[index].carrierName}",
+                            style: TextStyle(
+                                color: Constants.colorDefaultText,
+                                fontSize: 14),
+                          ),
                         ],
                       ),
                     ),
-
-                    Radio(value: null,groupValue: null, onChanged: (value) {
-
-                    })
+                    Radio(value: null, groupValue: null, onChanged: (value) {})
                   ],
                 );
               }),
@@ -218,7 +253,9 @@ class _LoginScreenState extends State<LoginScreen> with Functionality {
             FlatButton(
               child: Text(
                 "CANCEL",
-                style: TextStyle(color: Constants.colorPrimaryDark,fontWeight: FontWeight.w600),
+                style: TextStyle(
+                    color: Constants.colorPrimaryDark,
+                    fontWeight: FontWeight.w600),
               ),
               onPressed: () {
                 Navigator.of(context).pop();
@@ -227,7 +264,9 @@ class _LoginScreenState extends State<LoginScreen> with Functionality {
             FlatButton(
               child: Text(
                 "USE",
-                style: TextStyle(color: Constants.colorPrimaryDark,fontWeight: FontWeight.w600),
+                style: TextStyle(
+                    color: Constants.colorPrimaryDark,
+                    fontWeight: FontWeight.w600),
               ),
               onPressed: () {
                 Navigator.of(context).pop();
@@ -260,5 +299,35 @@ class _LoginScreenState extends State<LoginScreen> with Functionality {
     );
     return list;
   }
+
 //endregion
+
+  void _validatePhone() {
+    String countryCode = _countryCodeController.text.toString().trim();
+    String country = _countryController.text.toString().trim();
+    String phone = _phoneController.text.toString().trim();
+    _blocInstance().add(ValidationEvent(
+        countryCode: countryCode, countryAlphaCode: countryAlphaCode,country: country, phone: phone));
+  }
+
+  void _showErrorDialog(String errorText) {
+    showDialog(
+        context: context,
+        builder: (_) {
+          return AlertDialog(
+            content: Text(errorText),
+            contentPadding: EdgeInsets.only(top: 24, left: 24, right: 24),
+            actions: <Widget>[
+              FlatButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(
+                    "OK",
+                    style: TextStyle(color: Constants.colorPrimaryDark),
+                  ))
+            ],
+          );
+        });
+  }
 }

@@ -9,26 +9,24 @@ abstract class SelectCountryEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class FetchCountryListEvent extends SelectCountryEvent{}
+class FetchCountryListEvent extends SelectCountryEvent {}
 
-class SearchCountryEvent extends SelectCountryEvent{
+class SearchCountryEvent extends SelectCountryEvent {
   final String text;
+
   SearchCountryEvent({@required this.text});
 
   @override
   List<Object> get props => [text];
 }
 
-
-
-class SelectItemEvent extends SelectCountryEvent{
+class SelectItemEvent extends SelectCountryEvent {
   final CountryModel countryModel;
   final BuildContext context;
-  SelectItemEvent({@required this.countryModel,@required this.context});
+
+  SelectItemEvent({@required this.countryModel, @required this.context});
 
   @override
-  List<Object> get props => [countryModel,context];
+  List<Object> get props => [countryModel, context];
 }
-
-
 
