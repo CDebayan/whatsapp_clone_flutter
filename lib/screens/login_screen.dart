@@ -4,14 +4,10 @@ import 'package:mobile_number/mobile_number.dart';
 import 'package:whatsappcloneflutter/blocs/login_bloc/login_bloc.dart';
 import 'package:whatsappcloneflutter/blocs/login_bloc/login_event.dart';
 import 'package:whatsappcloneflutter/blocs/login_bloc/login_state.dart';
-import 'package:whatsappcloneflutter/blocs/select_country_bloc/select_country_bloc.dart';
-import 'package:whatsappcloneflutter/blocs/select_country_bloc/select_country_event.dart';
-import 'package:whatsappcloneflutter/blocs/select_country_bloc/select_country_state.dart';
 import 'package:whatsappcloneflutter/constants.dart';
+import 'package:whatsappcloneflutter/country_picker/country_model.dart';
 import 'package:whatsappcloneflutter/functionality.dart';
-import 'package:whatsappcloneflutter/models/country_list_model.dart';
 import 'package:whatsappcloneflutter/models/text_span_model.dart';
-import 'package:whatsappcloneflutter/screens/select_country_screen.dart';
 import 'package:whatsappcloneflutter/screens/verify_phone_screen.dart';
 import 'package:whatsappcloneflutter/widgets/widgets.dart';
 
@@ -35,8 +31,6 @@ class _LoginScreenState extends State<LoginScreen> with Functionality {
   @override
   void initState() {
     super.initState();
-
-    BlocProvider.of<SelectCountryBloc>(context).add(FetchCountryListEvent());
 
     MobileNumber.listenPhonePermission((isPermissionGranted) {
       if (isPermissionGranted) {
@@ -81,9 +75,7 @@ class _LoginScreenState extends State<LoginScreen> with Functionality {
                     } else if (state.status == "phoneError") {
                       _showErrorDialog(state.message);
                     } else if (state.status == "success") {
-                      Navigator.of(context).pushNamed(
-                          VerifyPhoneScreen.routeName,
-                          arguments: "+${_countryCodeController.text.toString().trim()}${_phoneController.text.toString().trim()}");
+                      _showAlertDialog();
                     }
                   }
                 },
@@ -117,9 +109,9 @@ class _LoginScreenState extends State<LoginScreen> with Functionality {
                   countryModel.name != "invalid country code") {
                 FocusScope.of(context).requestFocus(_phoneFocusNode);
               }
-              if (isValidList(countryModel.callingCodes) &&
-                  isValidString(countryModel.callingCodes[0])) {
-                _countryCodeController.text = countryModel.callingCodes[0];
+              if (isValidString(countryModel.callingCodes) &&
+                  isValidString(countryModel.callingCodes)) {
+                _countryCodeController.text = countryModel.callingCodes;
               }
             }
           }
@@ -139,7 +131,7 @@ class _LoginScreenState extends State<LoginScreen> with Functionality {
               contentPadding:
                   const EdgeInsets.only(bottom: -20, left: 16, right: 16),
               onTap: () {
-                Navigator.of(context).pushNamed(SelectCountryScreen.routeName);
+                _blocInstance().add(SelectCountryEvent(context: context));
               },
             ),
             Row(
@@ -149,11 +141,9 @@ class _LoginScreenState extends State<LoginScreen> with Functionality {
                     focusNode: _countryCodeFocusNode,
                     hint: "",
                     controller: _countryCodeController,
-                    maxLength: 3,
                     onChanged: (value) {
                       _blocInstance().add(SearchCountryByCodeEvent(
-                          code: _countryCodeController.text.toString().trim(),
-                          context: context));
+                          code: _countryCodeController.text.toString().trim()));
                     },
                     prefixIcon: Icon(
                       Icons.add,
@@ -175,6 +165,13 @@ class _LoginScreenState extends State<LoginScreen> with Functionality {
                       keyboardType: TextInputType.phone,
                     )),
               ],
+            ),
+            SizedBox(
+              height: 16,
+            ),
+            Text(
+              "Carrier SMS charges may apply",
+              style: TextStyle(color: Constants.colorDefaultText),
             ),
           ],
         ),
@@ -329,6 +326,47 @@ class _LoginScreenState extends State<LoginScreen> with Functionality {
                   child: Text(
                     "OK",
                     style: TextStyle(color: Constants.colorPrimaryDark),
+                  ))
+            ],
+          );
+        });
+  }
+
+  void _showAlertDialog() {
+    String _phoneNo =
+        "+${_countryCodeController.text.toString().trim()} ${_phoneController.text.toString().trim()}";
+    showDialog(
+        context: context,
+        builder: (_) {
+          return AlertDialog(
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text("We will be verifying the phone number:"),
+                SizedBox(height: 16,),
+                Text("$_phoneNo",style: TextStyle(fontWeight: FontWeight.bold),),
+                SizedBox(height: 16,),
+                Text("Is this OK, or would you like to edit the number?"),
+              ],
+            ),
+            contentPadding: EdgeInsets.only(top: 24, left: 24, right: 24),
+            actions: <Widget>[
+              FlatButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: FlatButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pushNamed(
+                          VerifyPhoneScreen.routeName,
+                          arguments: _phoneNo);
+                    },
+                    child: Text(
+                      "OK",
+                      style: TextStyle(color: Constants.colorPrimaryDark),
+                    ),
                   ))
             ],
           );

@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:whatsappcloneflutter/models/country_list_model.dart';
+import 'package:whatsappcloneflutter/country_picker/country_model.dart';
 
 abstract class LoginState extends Equatable {
   const LoginState();
@@ -10,6 +10,8 @@ abstract class LoginState extends Equatable {
 }
 
 class InitialState extends LoginState {}
+
+class LoadingState extends LoginState {}
 
 class SelectedCountryState extends LoginState {
   final CountryModel countryModel;

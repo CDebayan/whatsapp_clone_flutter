@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:whatsappcloneflutter/models/country_list_model.dart';
+import 'package:whatsappcloneflutter/country_picker/country_model.dart';
 
 abstract class LoginEvent extends Equatable{
   const LoginEvent();
@@ -10,19 +10,18 @@ abstract class LoginEvent extends Equatable{
 
 class SearchCountryByCodeEvent extends LoginEvent{
   final String code;
-  final BuildContext context;
-  const SearchCountryByCodeEvent({@required this.code,@required this.context});
+  const SearchCountryByCodeEvent({@required this.code});
 
   @override
-  List<Object> get props => [code,context];
+  List<Object> get props => [code];
 }
 
-class SelectedCountryEvent extends LoginEvent{
-  final CountryModel countryModel;
-  const SelectedCountryEvent({@required this.countryModel});
+class SelectCountryEvent extends LoginEvent{
+  final BuildContext context;
+  const SelectCountryEvent({@required this.context});
 
   @override
-  List<Object> get props => [countryModel];
+  List<Object> get props => [context];
 }
 
 
