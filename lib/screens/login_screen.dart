@@ -114,6 +114,23 @@ class _LoginScreenState extends State<LoginScreen> with Functionality {
                 _countryCodeController.text = countryModel.callingCodes;
               }
             }
+          }else if (state is SetSimNumberState) {
+            CountryModel countryModel = state.countryModel;
+            if (isValidObject(countryModel)) {
+              countryAlphaCode = countryModel.alpha2Code;
+              _countryController.text = countryModel.name;
+              if (isValidString(countryModel.name) &&
+                  countryModel.name != "invalid country code") {
+                FocusScope.of(context).requestFocus(_phoneFocusNode);
+              }
+              if (isValidString(countryModel.callingCodes) &&
+                  isValidString(countryModel.callingCodes)) {
+                _countryCodeController.text = countryModel.callingCodes;
+              }
+            }
+            if(isValidString(state.phone)){
+              _phoneController.text =state.phone;
+            }
           }
         },
         child: Column(
@@ -141,9 +158,13 @@ class _LoginScreenState extends State<LoginScreen> with Functionality {
                     focusNode: _countryCodeFocusNode,
                     hint: "",
                     controller: _countryCodeController,
+                    maxLength: 4,
                     onChanged: (value) {
-                      _blocInstance().add(SearchCountryByCodeEvent(
-                          code: _countryCodeController.text.toString().trim()));
+                      _blocInstance().add(
+                        SearchCountryByCodeEvent(
+                          code: _countryCodeController.text.toString().trim(),
+                        ),
+                      );
                     },
                     prefixIcon: Icon(
                       Icons.add,
@@ -193,15 +214,17 @@ class _LoginScreenState extends State<LoginScreen> with Functionality {
       return;
     }
 
-    List<SimCard> mobileNumbers = await MobileNumber.getSimCards;
-    print(mobileNumbers);
-    _showSimListDialog(mobileNumbers);
+    List<SimCard> sims = await MobileNumber.getSimCards;
+    if (isValidList(sims) && isValidObject(sims[0])) {
+      var selectedSim = sims[0];
+      _showSimListDialog(sims, selectedSim);
+    }
   }
 
   //endregion
 
   //region showDialog
-  void _showSimListDialog(List<SimCard> sims) {
+  void _showSimListDialog(List<SimCard> sims, SimCard selectedSim) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -243,7 +266,13 @@ class _LoginScreenState extends State<LoginScreen> with Functionality {
                         ],
                       ),
                     ),
-                    Radio(value: null, groupValue: null, onChanged: (value) {})
+                    Radio(
+                        value: sims[index],
+                        groupValue: selectedSim,
+                        onChanged: (value) {
+                          Navigator.of(context).pop();
+                          _showSimListDialog(sims, value);
+                        })
                   ],
                 );
               }),
@@ -268,6 +297,11 @@ class _LoginScreenState extends State<LoginScreen> with Functionality {
               ),
               onPressed: () {
                 Navigator.of(context).pop();
+                _blocInstance().add(
+                  SetSimNumberEvent(
+                    simCard: selectedSim,
+                  ),
+                );
               },
             ),
           ],
@@ -320,13 +354,23 @@ class _LoginScreenState extends State<LoginScreen> with Functionality {
             contentPadding: EdgeInsets.only(top: 24, left: 24, right: 24),
             actions: <Widget>[
               FlatButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(
-                    "OK",
-                    style: TextStyle(color: Constants.colorPrimaryDark),
-                  ))
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text(
+                  "OK",
+                  style: TextStyle(color: Constants.colorPrimaryDark),
+                ),
+              ),
+              FlatButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text(
+                  "OK",
+                  style: TextStyle(color: Constants.colorPrimaryDark),
+                ),
+              ),
             ],
           );
         });
@@ -344,31 +388,50 @@ class _LoginScreenState extends State<LoginScreen> with Functionality {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text("We will be verifying the phone number:"),
-                SizedBox(height: 16,),
-                Text("$_phoneNo",style: TextStyle(fontWeight: FontWeight.bold),),
-                SizedBox(height: 16,),
+                SizedBox(
+                  height: 16,
+                ),
+                Text(
+                  "$_phoneNo",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  height: 16,
+                ),
                 Text("Is this OK, or would you like to edit the number?"),
+                SizedBox(
+                  height: 16,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    InkWell(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(
+                        "Edit",
+                        style: TextStyle(color: Constants.colorPrimaryDark),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pushNamed(
+                            VerifyPhoneScreen.routeName,
+                            arguments: _phoneNo);
+                      },
+                      child: Text(
+                        "OK",
+                        style: TextStyle(color: Constants.colorPrimaryDark),
+                      ),
+                    )
+                  ],
+                ),
               ],
             ),
-            contentPadding: EdgeInsets.only(top: 24, left: 24, right: 24),
-            actions: <Widget>[
-              FlatButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: FlatButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      Navigator.of(context).pushNamed(
-                          VerifyPhoneScreen.routeName,
-                          arguments: _phoneNo);
-                    },
-                    child: Text(
-                      "OK",
-                      style: TextStyle(color: Constants.colorPrimaryDark),
-                    ),
-                  ))
-            ],
+            contentPadding:
+                EdgeInsets.only(top: 24, left: 24, right: 24, bottom: 16),
           );
         });
   }

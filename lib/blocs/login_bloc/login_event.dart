@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile_number/mobile_number.dart';
 import 'package:whatsappcloneflutter/country_picker/country_model.dart';
 
 abstract class LoginEvent extends Equatable{
@@ -22,6 +23,14 @@ class SelectCountryEvent extends LoginEvent{
 
   @override
   List<Object> get props => [context];
+}
+
+class SetSimNumberEvent extends LoginEvent{
+  final SimCard simCard;
+  const SetSimNumberEvent({@required this.simCard});
+
+  @override
+  List<Object> get props => [simCard];
 }
 
 

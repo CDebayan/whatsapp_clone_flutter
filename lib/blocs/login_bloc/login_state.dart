@@ -22,6 +22,16 @@ class SelectedCountryState extends LoginState {
   List<Object> get props => [countryModel];
 }
 
+class SetSimNumberState extends LoginState {
+  final CountryModel countryModel;
+  final String phone;
+
+  SetSimNumberState({@required this.countryModel,@required this.phone});
+
+  @override
+  List<Object> get props => [countryModel,phone];
+}
+
 class ValidationState extends LoginState {
   final String status;
   final String message;

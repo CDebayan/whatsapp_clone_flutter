@@ -22,6 +22,8 @@ class LoginBloc extends Bloc<LoginEvent,LoginState> with Functionality{
       yield SelectedCountryState(countryModel: countryModel);
     }else if(event is ValidationEvent){
       yield* _mapValidationEventToState(event);
+    }else if(event is SetSimNumberEvent){
+      yield* _mapSetSimNumberEventToState(event);
     }
   }
 
@@ -39,9 +41,10 @@ class LoginBloc extends Bloc<LoginEvent,LoginState> with Functionality{
   }
 
   Stream<LoginState> _mapValidationEventToState(ValidationEvent event) async*{
+    // TODO if ValidationState, previous and current state are same then not called (need to fix)
     yield LoadingState();
     if (event.countryCode.isEmpty) {
-      yield ValidationState(status: "countryCodeError", message: "Invalid country code length(1-3 digits only).");
+      yield ValidationState(status: "countryCodeError", message: "Invalid country code length(1-4 digits only).");
     }else if(event.country == "invalid country code"){
       yield ValidationState(status: "countryError", message: "Invalid country code.");
     }else if(event.phone.isEmpty){
@@ -54,6 +57,13 @@ class LoginBloc extends Bloc<LoginEvent,LoginState> with Functionality{
         yield ValidationState(status: "phoneError", message: "Invalid phone no.");
       }
     }
+  }
+
+  Stream<LoginState> _mapSetSimNumberEventToState(SetSimNumberEvent event) async*{
+    //  TODO if SetSimNumberState, previous and current state are same then not called (need to fix)
+    yield LoadingState();
+    CountryModel countryModel = await _countryPicker.searchCountryByCode(event.simCard.countryPhonePrefix);
+    yield SetSimNumberState(countryModel: countryModel, phone: event.simCard.number.substring(event.simCard.number.length - 10));
   }
 
 }
