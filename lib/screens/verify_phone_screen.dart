@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:whatsappcloneflutter/constants.dart';
 import 'package:whatsappcloneflutter/models/text_span_model.dart';
+import 'package:whatsappcloneflutter/widgets/otp_pin.dart';
 import 'package:whatsappcloneflutter/widgets/widgets.dart';
 
 class VerifyPhoneScreen extends StatelessWidget {
@@ -22,10 +23,9 @@ class VerifyPhoneScreen extends StatelessWidget {
             child: Column(
               children: <Widget>[
                 LinkText(_textList()),
-                TextField(),
-                SizedBox(
-                  height: 16,
-                ),
+
+                OtpPin(),
+
                 Text(
                   "Enter 6-digit code",
                   style: TextStyle(color: Constants.colorDefaultText),
