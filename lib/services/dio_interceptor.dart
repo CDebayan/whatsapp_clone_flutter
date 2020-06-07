@@ -24,9 +24,7 @@ class DioInterceptor extends InterceptorsWrapper{
   @override
   Future onError(DioError err) async{
     print("Error : $err");
-//    if(err.response != null && err.response.statusCode != null && err.response.statusCode == 401){
-//
-//    }
+
     return err;
   }
 }

@@ -20,6 +20,7 @@ dependencies:
   flutter_statusbarcolor: 0.2.3
   mobile_number: 1.0.2
   phone_number: 0.6.2+3
+  device_info: 0.4.2+4
 
 dev_dependencies:
   flutter_test:

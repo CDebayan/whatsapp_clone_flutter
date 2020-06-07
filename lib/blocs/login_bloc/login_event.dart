@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_number/mobile_number.dart';
-import 'package:whatsappcloneflutter/country_picker/country_model.dart';
 
 abstract class LoginEvent extends Equatable{
   const LoginEvent();

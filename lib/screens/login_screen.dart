@@ -386,8 +386,9 @@ class _LoginScreenState extends State<LoginScreen> with Functionality {
   }
 
   void _showAlertDialog() {
-    String _phoneNo =
-        "+${_countryCodeController.text.toString().trim()} ${_phoneController.text.toString().trim()}";
+    String _countryCode = _countryCodeController.text.toString().trim();
+
+    String _mobileNo = _phoneController.text.toString().trim();
     showDialog(
         context: context,
         builder: (_) {
@@ -401,7 +402,7 @@ class _LoginScreenState extends State<LoginScreen> with Functionality {
                   height: 16,
                 ),
                 Text(
-                  "$_phoneNo",
+                  "+$_countryCode $_mobileNo",
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 SizedBox(
@@ -428,7 +429,7 @@ class _LoginScreenState extends State<LoginScreen> with Functionality {
                         Navigator.of(context).pop();
                         Navigator.of(context).pushNamed(
                             VerifyPhoneScreen.routeName,
-                            arguments: _phoneNo);
+                            arguments: "$_countryCode $_mobileNo");
                       },
                       child: Text(
                         "OK",
