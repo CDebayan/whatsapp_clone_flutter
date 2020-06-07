@@ -3,6 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:whatsappcloneflutter/constants.dart';
 
 class OtpPin extends StatefulWidget {
+  final TextEditingController otpController;
+  OtpPin(this.otpController);
+
   @override
   _OtpPinState createState() => _OtpPinState();
 }
@@ -77,6 +80,12 @@ class _OtpPinState extends State<OtpPin> {
               controller[index + 1].selection = TextSelection.fromPosition(
                 TextPosition(offset: 1),
               );
+            }else{
+              widget.otpController.text = "";
+              for(var item in controller){
+                widget.otpController.text =  "${widget.otpController.text}${item.text}";
+              }
+              FocusScope.of(context).requestFocus(FocusNode());
             }
           } else if (value.isEmpty) {
             controller[index].text = " __";

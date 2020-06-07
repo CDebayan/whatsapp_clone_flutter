@@ -26,7 +26,8 @@ class _LoginScreenState extends State<LoginScreen> with Functionality {
   final _phoneFocusNode = FocusNode();
   final _countryCodeFocusNode = FocusNode();
 
-  String countryAlphaCode;
+  String _countryAlphaCode;
+  BuildContext _context;
 
   @override
   void initState() {
@@ -40,57 +41,65 @@ class _LoginScreenState extends State<LoginScreen> with Functionality {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: transparentAppBar(title: "Enter your phone number"),
-      body: SafeArea(
-        child: Container(
-          padding: EdgeInsets.all(16),
-          child: Column(
-            children: <Widget>[
-              Expanded(
+  Widget build(BuildContext _context) {
+    return BlocProvider(
+      create: (_) => LoginBloc(),
+      child: Builder(
+        builder: (context) {
+          this._context = context;
+          return Scaffold(
+            appBar: transparentAppBar(title: "Enter your phone number"),
+            body: SafeArea(
+              child: Container(
+                padding: EdgeInsets.all(16),
                 child: Column(
                   children: <Widget>[
-                    //region header
-                    LinkText(_textList()),
+                    Expanded(
+                      child: Column(
+                        children: <Widget>[
+                          //region header
+                          LinkText(_textList()),
+                          //endregion
+
+                          //region body
+                          _body()
+                          //endregion
+                        ],
+                      ),
+                    ),
+
+                    //region next button
+                    BlocListener<LoginBloc, LoginState>(
+                      listener: (context, state) {
+                        if (state is ValidationState) {
+                          if (state.status == "countryCodeError") {
+                            _showErrorDialog(state.message);
+                          } else if (state.status == "countryError") {
+                            _countryController.clear();
+                            _countryCodeController.clear();
+                            _showErrorDialog(state.message);
+                          } else if (state.status == "phoneError") {
+                            _showErrorDialog(state.message);
+                          } else if (state.status == "success") {
+                            _showAlertDialog();
+                          }
+                        }
+                      },
+                      child: Button(
+                          text: "Next",
+                          onPressed: () {
+                            _validatePhone();
+                          }),
+                    ),
                     //endregion
 
-                    //region body
-                    _body()
-                    //endregion
+                    SizedBox(height: 24),
                   ],
                 ),
               ),
-
-              //region next button
-              BlocListener<LoginBloc, LoginState>(
-                listener: (context, state) {
-                  if (state is ValidationState) {
-                    if (state.status == "countryCodeError") {
-                      _showErrorDialog(state.message);
-                    } else if (state.status == "countryError") {
-                      _countryController.clear();
-                      _countryCodeController.clear();
-                      _showErrorDialog(state.message);
-                    } else if (state.status == "phoneError") {
-                      _showErrorDialog(state.message);
-                    } else if (state.status == "success") {
-                      _showAlertDialog();
-                    }
-                  }
-                },
-                child: Button(
-                    text: "Next",
-                    onPressed: () {
-                      _validatePhone();
-                    }),
-              ),
-              //endregion
-
-              SizedBox(height: 24),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }
@@ -103,7 +112,7 @@ class _LoginScreenState extends State<LoginScreen> with Functionality {
           if (state is SelectedCountryState) {
             CountryModel countryModel = state.countryModel;
             if (isValidObject(countryModel)) {
-              countryAlphaCode = countryModel.alpha2Code;
+              _countryAlphaCode = countryModel.alpha2Code;
               _countryController.text = countryModel.name;
               if (isValidString(countryModel.name) &&
                   countryModel.name != "invalid country code") {
@@ -114,10 +123,10 @@ class _LoginScreenState extends State<LoginScreen> with Functionality {
                 _countryCodeController.text = countryModel.callingCodes;
               }
             }
-          }else if (state is SetSimNumberState) {
+          } else if (state is SetSimNumberState) {
             CountryModel countryModel = state.countryModel;
             if (isValidObject(countryModel)) {
-              countryAlphaCode = countryModel.alpha2Code;
+              _countryAlphaCode = countryModel.alpha2Code;
               _countryController.text = countryModel.name;
               if (isValidString(countryModel.name) &&
                   countryModel.name != "invalid country code") {
@@ -128,8 +137,8 @@ class _LoginScreenState extends State<LoginScreen> with Functionality {
                 _countryCodeController.text = countryModel.callingCodes;
               }
             }
-            if(isValidString(state.phone)){
-              _phoneController.text =state.phone;
+            if (isValidString(state.phone)) {
+              _phoneController.text = state.phone;
             }
           }
         },
@@ -202,7 +211,7 @@ class _LoginScreenState extends State<LoginScreen> with Functionality {
 
   //region blocInstance
   LoginBloc _blocInstance() {
-    return BlocProvider.of<LoginBloc>(context);
+    return BlocProvider.of<LoginBloc>(_context);
   }
 
   //endregion
@@ -340,7 +349,7 @@ class _LoginScreenState extends State<LoginScreen> with Functionality {
     String phone = _phoneController.text.toString().trim();
     _blocInstance().add(ValidationEvent(
         countryCode: countryCode,
-        countryAlphaCode: countryAlphaCode,
+        countryAlphaCode: _countryAlphaCode,
         country: country,
         phone: phone));
   }

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:whatsappcloneflutter/constants.dart';
 import 'package:whatsappcloneflutter/models/text_span_model.dart';
+import 'package:whatsappcloneflutter/screens/dashboard_screen.dart';
 import 'package:whatsappcloneflutter/widgets/otp_pin.dart';
 import 'package:whatsappcloneflutter/widgets/widgets.dart';
 
 class VerifyPhoneScreen extends StatelessWidget {
   static const String routeName = "VerifyPhoneScreen";
-
+  final TextEditingController _otpController = TextEditingController();
   static BuildContext _context;
   static String _phoneNo;
 
@@ -14,6 +15,16 @@ class VerifyPhoneScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     _context = context;
     _phoneNo = ModalRoute.of(context).settings.arguments;
+
+    _otpController.addListener(() {
+        if(_otpController.text.length == 6){
+          if(_otpController.text == "000000"){
+Navigator.of(context).pushNamed(DashboardScreen.routeName);
+          }
+        }
+    });
+
+
     return Scaffold(
       appBar: transparentAppBar(title: "Verify $_phoneNo"),
       body: SafeArea(
@@ -24,7 +35,7 @@ class VerifyPhoneScreen extends StatelessWidget {
               children: <Widget>[
                 LinkText(_textList()),
 
-                OtpPin(),
+                OtpPin(_otpController),
 
                 Text(
                   "Enter 6-digit code",
