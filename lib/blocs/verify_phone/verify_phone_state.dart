@@ -16,6 +16,18 @@ class VerifyingState extends VerifyPhoneState{
   List<Object> get props => [];
 }
 
+class VerifiedState extends VerifyPhoneState{
+  const VerifiedState();
+  @override
+  List<Object> get props => [];
+}
+
+class VerificationFailedState extends VerifyPhoneState{
+  const VerificationFailedState();
+  @override
+  List<Object> get props => [];
+}
+
 class InvalidOtpState extends VerifyPhoneState{
   const InvalidOtpState();
   @override

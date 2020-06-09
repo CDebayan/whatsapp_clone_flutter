@@ -2,10 +2,12 @@ import 'package:device_info/device_info.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:whatsappcloneflutter/blocs/verify_phone/verify_phone_event.dart';
 import 'package:whatsappcloneflutter/blocs/verify_phone/verify_phone_state.dart';
+import 'package:whatsappcloneflutter/functionality.dart';
+import 'package:whatsappcloneflutter/models/login_model.dart';
 import 'package:whatsappcloneflutter/services/dio_services.dart';
 import 'dart:io';
 
-class VerifyPhoneBloc extends Bloc<VerifyPhoneEvent,VerifyPhoneState>{
+class VerifyPhoneBloc extends Bloc<VerifyPhoneEvent,VerifyPhoneState> with Functionality{
   @override
   VerifyPhoneState get initialState => InitialState();
 
@@ -20,7 +22,15 @@ class VerifyPhoneBloc extends Bloc<VerifyPhoneEvent,VerifyPhoneState>{
     if(event.otp == "000000"){
       yield VerifyingState();
       AndroidDeviceInfo androidInfo =await DeviceInfoPlugin().androidInfo;
-      DioServices.login(countryCode : event.countryCode,mobile: event.mobileNo,id: androidInfo.androidId,platform: Platform.operatingSystem);
+      LoginModel response = await DioServices.login(countryCode : event.countryCode,mobileNo: event.mobileNo,deviceId: androidInfo.androidId,platform: Platform.operatingSystem);
+      if(isValidObject(response) && isValidString(response.status) && response.status == "1"){
+        if(isValidString(response.token)){
+          updateAccessToken(response.token);
+        }
+        yield VerifiedState();
+      }else{
+        yield VerificationFailedState();
+      }
     }else{
       yield InvalidOtpState();
     }

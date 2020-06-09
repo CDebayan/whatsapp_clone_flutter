@@ -1,10 +1,10 @@
-
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:whatsappcloneflutter/constants.dart';
 
 mixin Functionality {
-
   bool isValidString(String value) {
     if (value == null || value.isEmpty || value == "null") {
       return false;
@@ -42,10 +42,14 @@ mixin Functionality {
     }
   }
 
-
-  String codeToCountryEmoji(String code){
+  String codeToCountryEmoji(String code) {
     final char1 = code.codeUnitAt(0) - 0x41 + 0x1F1E6;
     final char2 = code.codeUnitAt(1) - 0x41 + 0x1F1E6;
     return String.fromCharCode(char1) + String.fromCharCode(char2);
+  }
+
+  void updateAccessToken(String token) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(Constants.accessToken, token);
   }
 }

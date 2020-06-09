@@ -3,11 +3,15 @@ import 'package:flutter/material.dart';
 class Constants {
   //region icon name
   static const String logo = "icons/logo.svg";
+
 //endregion
 
   //region image name
   static const String welcome = "images/welcome.png";
+
 //endregion
+
+  static const String accessToken = "accessToken";
 
 
   //region color name
@@ -21,9 +25,6 @@ class Constants {
 //endregion
 
 }
-
-
-
 
 //Teal Green
 //#075E54

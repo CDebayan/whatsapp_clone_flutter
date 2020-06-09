@@ -6,6 +6,7 @@ import 'package:whatsappcloneflutter/blocs/verify_phone/verify_phone_event.dart'
 import 'package:whatsappcloneflutter/blocs/verify_phone/verify_phone_state.dart';
 import 'package:whatsappcloneflutter/constants.dart';
 import 'package:whatsappcloneflutter/models/text_span_model.dart';
+import 'package:whatsappcloneflutter/screens/dashboard_screen.dart';
 import 'package:whatsappcloneflutter/widgets/otp_pin.dart';
 import 'package:whatsappcloneflutter/widgets/widgets.dart';
 
@@ -127,6 +128,10 @@ class VerifyPhoneScreen extends StatelessWidget {
                     _showErrorDialog("Invalid OTP");
                   }else if(state is VerifyingState){
                     _showProgressDialog();
+                  }else if(state is VerifiedState){
+                    Navigator.of(context)..pushNamedAndRemoveUntil(DashboardScreen.routeName, (r) => false);
+                  }else if(state is VerificationFailedState){
+                    _showErrorDialog("Login Failed");
                   }
                 }),
               ),
