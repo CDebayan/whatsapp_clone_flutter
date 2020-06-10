@@ -129,7 +129,7 @@ class VerifyPhoneScreen extends StatelessWidget {
                   }else if(state is VerifyingState){
                     _showProgressDialog();
                   }else if(state is VerifiedState){
-                    Navigator.of(context)..pushNamedAndRemoveUntil(DashboardScreen.routeName, (r) => false);
+                    Navigator.of(context).pushNamedAndRemoveUntil(DashboardScreen.routeName, (r) => false);
                   }else if(state is VerificationFailedState){
                     _showErrorDialog("Login Failed");
                   }

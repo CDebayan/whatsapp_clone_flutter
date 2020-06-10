@@ -52,4 +52,14 @@ mixin Functionality {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString(Constants.accessToken, token);
   }
+
+  Future<String> getAccessToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString(Constants.accessToken);
+    if (token != null) {
+      return token;
+    } else {
+      return "";
+    }
+  }
 }
