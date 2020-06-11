@@ -21,7 +21,7 @@ class _SplashScreenState extends State<SplashScreen>  with Functionality{
 
     Future.delayed(const Duration(milliseconds: 1000), () async{
       String token = await getAccessToken();
-      if(!isValidString(token)){
+      if(isValidString(token)){
         Navigator.pushReplacementNamed(context, DashboardScreen.routeName);
       }else{
         Navigator.pushReplacementNamed(context, WelcomeScreen.routeName);

@@ -24,8 +24,8 @@ class VerifyPhoneBloc extends Bloc<VerifyPhoneEvent,VerifyPhoneState> with Funct
       AndroidDeviceInfo androidInfo =await DeviceInfoPlugin().androidInfo;
       LoginModel response = await DioServices.login(countryCode : event.countryCode,mobileNo: event.mobileNo,deviceId: androidInfo.androidId,platform: Platform.operatingSystem);
       if(isValidObject(response) && isValidString(response.status) && response.status == "1"){
-        if(isValidString(response.token)){
-          updateAccessToken(response.token);
+        if(isValidString(response.accessToken)){
+          updateAccessToken(response.accessToken);
         }
         yield VerifiedState();
       }else{

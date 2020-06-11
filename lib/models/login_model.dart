@@ -1,15 +1,15 @@
 class LoginModel {
   String status;
   String message;
-  String token;
+  String accessToken;
 
-  LoginModel({this.status, this.message, this.token});
+  LoginModel({this.status, this.message, this.accessToken});
 
   factory LoginModel.fromJson(Map<String, dynamic> json) {
     return LoginModel(
       status: json['status'].toString(),
       message: json['message'].toString(),
-      token: json['token'].toString(),
+      accessToken: json['accessToken'].toString(),
     );
   }
 
@@ -17,7 +17,7 @@ class LoginModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this.status;
     data['message'] = this.message;
-    data['token'] = this.token;
+    data['accessToken'] = this.accessToken;
     return data;
   }
 }
