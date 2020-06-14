@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:whatsappcloneflutter/constants.dart';
 import 'package:whatsappcloneflutter/screens/chat_screen.dart';
+import 'package:whatsappcloneflutter/screens/user_list_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   static const String routeName = "DashboardScreen";
@@ -25,14 +26,16 @@ class _DashboardScreenState extends State<DashboardScreen>{
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.message),
           backgroundColor: Constants.colorPrimary,
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).pushNamed(UserListScreen.routeName);
+          },
         ),
         appBar: AppBar(
           title: Text("WhatsApp"),
           elevation: 0,
           actions: <Widget>[
-            IconButton(icon: Icon(Icons.search,color: Colors.white,),onPressed: (){},),
-            IconButton(icon: Icon(Icons.more_vert,color: Colors.white,),onPressed: (){},),
+            IconButton(icon: Icon(Icons.search),onPressed: (){},),
+            IconButton(icon: Icon(Icons.more_vert),onPressed: (){},),
           ],
           bottom: TabBar(
             labelColor: Colors.white,

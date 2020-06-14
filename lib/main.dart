@@ -4,6 +4,7 @@ import 'package:whatsappcloneflutter/constants.dart';
 import 'package:whatsappcloneflutter/screens/dashboard_screen.dart';
 import 'package:whatsappcloneflutter/screens/login_screen.dart';
 import 'package:whatsappcloneflutter/screens/splash_screen.dart';
+import 'package:whatsappcloneflutter/screens/user_list_screen.dart';
 import 'package:whatsappcloneflutter/screens/verify_phone_screen.dart';
 import 'package:whatsappcloneflutter/screens/welcome_screen.dart';
 
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
         brightness: Brightness.light,
         primaryColor: Constants.colorPrimaryDark,
         cursorColor: Constants.colorPrimaryDark,
-        primaryIconTheme:IconThemeData(color: Constants.colorBlack),
+        primaryIconTheme:IconThemeData(color: Constants.colorWhite),
       ),
       initialRoute: SplashScreen.routeName,
       routes: {
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
         LoginScreen.routeName: (context) => LoginScreen(),
         VerifyPhoneScreen.routeName: (context) => VerifyPhoneScreen(),
         DashboardScreen.routeName: (context) => DashboardScreen(),
+        UserListScreen.routeName: (context) => UserListScreen(),
       },
     );
   }

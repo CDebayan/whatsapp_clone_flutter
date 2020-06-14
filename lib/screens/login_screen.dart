@@ -371,15 +371,6 @@ class _LoginScreenState extends State<LoginScreen> with Functionality {
                   style: TextStyle(color: Constants.colorPrimaryDark),
                 ),
               ),
-              FlatButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text(
-                  "OK",
-                  style: TextStyle(color: Constants.colorPrimaryDark),
-                ),
-              ),
             ],
           );
         });
