@@ -117,7 +117,7 @@ class _UserListScreenState extends State<UserListScreen> with Functionality {
                   width: 45,
                   color: Constants.colorPrimary,
                   containerChild: Icon(
-                    Icons.group,
+                    Icons.person,
                     color: Colors.white,
                     size: 20,
                   ),
