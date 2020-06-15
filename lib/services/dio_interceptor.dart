@@ -1,10 +1,13 @@
 import 'package:dio/dio.dart';
+import 'package:whatsappcloneflutter/functionality.dart';
+import 'package:whatsappcloneflutter/models/general_response.dart';
 import 'package:whatsappcloneflutter/services/dio_client.dart';
+import 'package:whatsappcloneflutter/services/dio_services.dart';
 
-class DioInterceptor extends InterceptorsWrapper{
+class DioInterceptor extends InterceptorsWrapper with Functionality{
   @override
   Future onRequest(RequestOptions options) async{
-    String accessToken = "await getAccessToken()";
+    String accessToken = await getAccessToken();
     options.headers["Authorization"] = "Bearer $accessToken";
     options.baseUrl = DioClient.baseUrl;
 
@@ -24,7 +27,10 @@ class DioInterceptor extends InterceptorsWrapper{
   @override
   Future onError(DioError err) async{
     print("Error : $err");
-
+    if(err.response != null && err.response.statusCode != null && err.response.statusCode == 401){
+      GeneralResponse response = await DioServices.refreshToken();
+      updateAccessToken(response.message);
+    }
     return err;
   }
 }

@@ -22,7 +22,6 @@ class _ChatScreenState extends State<ChatScreen> {
     super.initState();
     _chatBloc = ChatBloc();
     _checkPermission();
-    _getContactList();
   }
 
   @override
@@ -124,13 +123,4 @@ class _ChatScreenState extends State<ChatScreen> {
     _chatBloc.close();
   }
 
-  void _getContactList() async {
-    Iterable<Contact> contacts = await ContactsService.getContacts(
-        withThumbnails: false,
-        photoHighResolution: false,
-        orderByGivenName: false,
-        iOSLocalizedLabels: false);
-
-    print(contacts);
-  }
 }

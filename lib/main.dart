@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
+import 'package:whatsappcloneflutter/blocs/user_list_bloc/user_list_bloc.dart';
 import 'package:whatsappcloneflutter/constants.dart';
 import 'package:whatsappcloneflutter/screens/dashboard_screen.dart';
 import 'package:whatsappcloneflutter/screens/login_screen.dart';
@@ -16,23 +18,29 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     FlutterStatusbarcolor.setStatusBarColor(Constants.colorPrimaryDark);
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        brightness: Brightness.light,
-        primaryColor: Constants.colorPrimaryDark,
-        cursorColor: Constants.colorPrimaryDark,
-        primaryIconTheme:IconThemeData(color: Constants.colorWhite),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<UserListBloc>(create: (BuildContext context) => UserListBloc(),
+        ),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          brightness: Brightness.light,
+          primaryColor: Constants.colorPrimaryDark,
+          cursorColor: Constants.colorPrimaryDark,
+          primaryIconTheme:IconThemeData(color: Constants.colorWhite),
+        ),
+        initialRoute: SplashScreen.routeName,
+        routes: {
+          SplashScreen.routeName: (context) => SplashScreen(),
+          WelcomeScreen.routeName: (context) => WelcomeScreen(),
+          LoginScreen.routeName: (context) => LoginScreen(),
+          VerifyPhoneScreen.routeName: (context) => VerifyPhoneScreen(),
+          DashboardScreen.routeName: (context) => DashboardScreen(),
+          UserListScreen.routeName: (context) => UserListScreen(),
+        },
       ),
-      initialRoute: SplashScreen.routeName,
-      routes: {
-        SplashScreen.routeName: (context) => SplashScreen(),
-        WelcomeScreen.routeName: (context) => WelcomeScreen(),
-        LoginScreen.routeName: (context) => LoginScreen(),
-        VerifyPhoneScreen.routeName: (context) => VerifyPhoneScreen(),
-        DashboardScreen.routeName: (context) => DashboardScreen(),
-        UserListScreen.routeName: (context) => UserListScreen(),
-      },
     );
   }
 }

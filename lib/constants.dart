@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class Constants {
   //region icon name
   static const String logo = "icons/logo.svg";
+  static const String userPlaceHolder = "icons/user_placeholder.svg";
 
 //endregion
 

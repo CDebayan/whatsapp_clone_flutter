@@ -1,6 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:whatsappcloneflutter/constants.dart';
+import 'package:whatsappcloneflutter/functionality.dart';
 import 'package:whatsappcloneflutter/models/text_span_model.dart';
 
 class Button extends StatelessWidget {
@@ -195,6 +199,37 @@ class CircleContainer extends StatelessWidget {
         shape: BoxShape.circle,
       ),
       child: child ?? Center(child: containerChild),
+    );
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////////
+
+class ProfileImageView extends StatelessWidget with Functionality {
+  final String profileImage;
+  final GestureTapCallback onTap;
+
+  ProfileImageView({
+    @required this.profileImage,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+     width: 45,
+      height: 45,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(75.0),
+        child: CachedNetworkImage(
+          imageUrl: profileImage,
+          fit: BoxFit.cover,
+          placeholder: (context, url) =>
+              SvgPicture.asset(Constants.userPlaceHolder),
+          errorWidget: (context, url, error) =>
+              SvgPicture.asset(Constants.userPlaceHolder)
+        ),
+      ),
     );
   }
 }

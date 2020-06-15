@@ -26,6 +26,7 @@ dependencies:
   material_design_icons_flutter: 4.0.5345
   permission_handler: 5.0.1
   contacts_service: 0.4.6
+  cached_network_image: 2.2.0+1
 
 dev_dependencies:
   flutter_test:
