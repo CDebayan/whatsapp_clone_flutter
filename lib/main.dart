@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:whatsappcloneflutter/blocs/user_list_bloc/user_list_bloc.dart';
+import 'package:whatsappcloneflutter/blocs/user_profile_bloc/user_profile_bloc.dart';
 import 'package:whatsappcloneflutter/constants.dart';
 import 'package:whatsappcloneflutter/screens/dashboard_screen.dart';
 import 'package:whatsappcloneflutter/screens/login_screen.dart';
+import 'package:whatsappcloneflutter/screens/settings_screen.dart';
 import 'package:whatsappcloneflutter/screens/splash_screen.dart';
 import 'package:whatsappcloneflutter/screens/user_list_screen.dart';
 import 'package:whatsappcloneflutter/screens/verify_phone_screen.dart';
@@ -20,7 +22,11 @@ class MyApp extends StatelessWidget {
     FlutterStatusbarcolor.setStatusBarColor(Constants.colorPrimaryDark);
     return MultiBlocProvider(
       providers: [
-        BlocProvider<UserListBloc>(create: (BuildContext context) => UserListBloc(),
+        BlocProvider<UserListBloc>(
+          create: (BuildContext context) => UserListBloc(),
+        ),
+        BlocProvider<UserProfileBloc>(
+          create: (BuildContext context) => UserProfileBloc(),
         ),
       ],
       child: MaterialApp(
@@ -29,7 +35,7 @@ class MyApp extends StatelessWidget {
           brightness: Brightness.light,
           primaryColor: Constants.colorPrimaryDark,
           cursorColor: Constants.colorPrimaryDark,
-          primaryIconTheme:IconThemeData(color: Constants.colorWhite),
+          primaryIconTheme: IconThemeData(color: Constants.colorWhite),
         ),
         initialRoute: SplashScreen.routeName,
         routes: {
@@ -39,6 +45,7 @@ class MyApp extends StatelessWidget {
           VerifyPhoneScreen.routeName: (context) => VerifyPhoneScreen(),
           DashboardScreen.routeName: (context) => DashboardScreen(),
           UserListScreen.routeName: (context) => UserListScreen(),
+          SettingsScreen.routeName: (context) => SettingsScreen(),
         },
       ),
     );

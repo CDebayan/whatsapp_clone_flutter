@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:whatsappcloneflutter/models/contact_list_model.dart';
 import 'package:whatsappcloneflutter/models/general_response.dart';
 import 'package:whatsappcloneflutter/models/login_model.dart';
+import 'package:whatsappcloneflutter/models/user_details_model.dart';
 import 'package:whatsappcloneflutter/models/user_list_model.dart';
 
 import 'dio_client.dart';
@@ -44,6 +45,20 @@ class DioServices {
         return response;
       }
       return UserListModel(status: generalError.status, message: generalError.message);
+    }
+  }
+
+  static Future<UserDetailsModel> getUserDetails() async {
+    try {
+      var response = await DioClient.getCall('user/userDetails');
+      return UserDetailsModel.fromJson(response);
+    } on DioError catch (e) {
+      GeneralError generalError = error(e);
+      if(generalError.status == "401"){
+        var response = await getUserDetails();
+        return response;
+      }
+      return UserDetailsModel(status: generalError.status, message: generalError.message);
     }
   }
 

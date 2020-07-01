@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:whatsappcloneflutter/constants.dart';
 import 'package:whatsappcloneflutter/screens/chat_screen.dart';
+import 'package:whatsappcloneflutter/screens/settings_screen.dart';
 import 'package:whatsappcloneflutter/screens/user_list_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -10,7 +11,16 @@ class DashboardScreen extends StatefulWidget {
   _DashboardScreenState createState() => _DashboardScreenState();
 }
 
-class _DashboardScreenState extends State<DashboardScreen>{
+class _DashboardScreenState extends State<DashboardScreen> {
+  var dropdownValue;
+
+  static const List<String> choices = <String>[
+    "New Group",
+    "New broadcast",
+    "WhatsApp Web",
+    "Starred messages",
+    "Settings",
+  ];
 
   @override
   void initState() {
@@ -34,8 +44,25 @@ class _DashboardScreenState extends State<DashboardScreen>{
           title: Text("WhatsApp"),
           elevation: 0,
           actions: <Widget>[
-            IconButton(icon: Icon(Icons.search),onPressed: (){},),
-            IconButton(icon: Icon(Icons.more_vert),onPressed: (){},),
+            IconButton(
+              icon: Icon(Icons.search),
+              onPressed: () {},
+            ),
+            PopupMenuButton<String>(
+              onSelected: (value) {
+                if(value == "Settings"){
+                  Navigator.of(context).pushNamed(SettingsScreen.routeName);
+                }
+              },
+              itemBuilder: (BuildContext context) {
+                return choices.map((String choice) {
+                  return PopupMenuItem<String>(
+                    value: choice,
+                    child: Text(choice),
+                  );
+                }).toList();
+              },
+            )
           ],
           bottom: TabBar(
             labelColor: Colors.white,
@@ -57,7 +84,7 @@ class _DashboardScreenState extends State<DashboardScreen>{
           ),
         ),
         body: SafeArea(
-          child: TabBarView( children: <Widget>[
+          child: TabBarView(children: <Widget>[
             Text("data"),
             ChatScreen(),
             Text("data"),
