@@ -9,6 +9,7 @@ import 'package:whatsappcloneflutter/screens/login_screen.dart';
 import 'package:whatsappcloneflutter/screens/settings_screen.dart';
 import 'package:whatsappcloneflutter/screens/splash_screen.dart';
 import 'package:whatsappcloneflutter/screens/user_list_screen.dart';
+import 'package:whatsappcloneflutter/screens/user_profile_screen.dart';
 import 'package:whatsappcloneflutter/screens/verify_phone_screen.dart';
 import 'package:whatsappcloneflutter/screens/welcome_screen.dart';
 
@@ -46,6 +47,7 @@ class MyApp extends StatelessWidget {
           DashboardScreen.routeName: (context) => DashboardScreen(),
           UserListScreen.routeName: (context) => UserListScreen(),
           SettingsScreen.routeName: (context) => SettingsScreen(),
+          UserProfileScreen.routeName: (context) => UserProfileScreen(),
         },
       ),
     );

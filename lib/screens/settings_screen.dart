@@ -4,6 +4,7 @@ import 'package:whatsappcloneflutter/blocs/user_profile_bloc/user_profile_bloc.d
 import 'package:whatsappcloneflutter/blocs/user_profile_bloc/user_profile_event.dart';
 import 'package:whatsappcloneflutter/blocs/user_profile_bloc/user_profile_state.dart';
 import 'package:whatsappcloneflutter/constants.dart';
+import 'package:whatsappcloneflutter/screens/user_profile_screen.dart';
 import 'package:whatsappcloneflutter/widgets/widgets.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -45,6 +46,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                   title: Text(state.userDetails.name),
                   subtitle: Text(state.userDetails.about),
+                  onTap: (){
+                    Navigator.of(context).pushNamed(UserProfileScreen.routeName);
+                  },
                 );
               }else{
                 return ListTile(

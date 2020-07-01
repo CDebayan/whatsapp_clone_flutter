@@ -14,7 +14,17 @@ class UserProfileBloc extends Bloc<UserProfileEvent,UserProfileState> with Funct
     if(event is FetchUserDetailsEvent){
       yield LoadingState();
       UserDetailsModel userDetailsModel = await DioServices.getUserDetails();
-      yield LoadedState(userDetailsModel.data);
+      if(isValidObject(userDetailsModel) && isValidString(userDetailsModel.status)){
+        if(userDetailsModel.status == "1" && isValidObject(userDetailsModel.data)){
+          yield LoadedState(userDetailsModel.data);
+        }else if(userDetailsModel.status == "internetError"){
+          yield NoInternetState();
+        }else{
+          yield ErrorState();
+        }
+      }else{
+        yield ErrorState();
+      }
     }
   }
   

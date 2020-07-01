@@ -208,28 +208,72 @@ class CircleContainer extends StatelessWidget {
 class ProfileImageView extends StatelessWidget with Functionality {
   final String profileImage;
   final GestureTapCallback onTap;
+  final bool isLoading;
+  final bool showCamera;
+  final double height;
+  final double width;
 
   ProfileImageView({
     @required this.profileImage,
     this.onTap,
+    this.isLoading = false,
+    this.showCamera = false,
+    this.height = 45,
+    this.width = 45,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-     width: 45,
-      height: 45,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(75.0),
-        child: CachedNetworkImage(
-          imageUrl: profileImage,
-          fit: BoxFit.cover,
-          placeholder: (context, url) =>
-              SvgPicture.asset(Constants.userPlaceHolder),
-          errorWidget: (context, url, error) =>
-              SvgPicture.asset(Constants.userPlaceHolder)
+    return Stack(
+      alignment: Alignment.bottomRight,
+      children: <Widget>[
+        PhysicalModel(
+          color: Colors.transparent,
+          child: Container(
+            height: height,
+            width: width,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(75.0),
+            ),
+            child: isLoading
+                ? Center(
+                    child: Container(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                        )),
+                  )
+                : ClipRRect(
+                    borderRadius: BorderRadius.circular(75.0),
+                    child: CachedNetworkImage(
+                        imageUrl: profileImage,
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) =>
+                            SvgPicture.asset(Constants.userPlaceHolder),
+                        errorWidget: (context, url, error) =>
+                            SvgPicture.asset(Constants.userPlaceHolder)),
+                  ),
+          ),
         ),
-      ),
+        Positioned(
+          bottom: 4,
+          right: 4,
+          child: showCamera
+              ? InkWell(
+                  onTap: onTap,
+                  child: CircleContainer(
+                    height: 40,
+                    width: 40,
+                    child: Icon(
+                      Icons.camera_alt,
+                      size: 20,
+                      color: Constants.colorWhite,
+                    ),
+                  ))
+              : Container(),
+        )
+      ],
     );
   }
 }

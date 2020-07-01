@@ -53,7 +53,7 @@ class DioClient {
 
 GeneralError error(DioError e){
   if (e.error is SocketException) {
-    return GeneralError(status: "error", message: "You are not connected to internet");
+    return GeneralError(status: "internetError", message: "You are not connected to internet");
   } else if (e.error is HttpException) {
     return GeneralError(status: "error", message: "Http Exception");
   } else if (e.error is FormatException) {

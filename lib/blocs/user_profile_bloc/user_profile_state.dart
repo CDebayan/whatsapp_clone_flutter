@@ -23,3 +23,15 @@ class LoadedState extends UserProfileState{
   @override
   List<Object> get props => [userDetails];
 }
+
+class NoInternetState extends UserProfileState{
+  const NoInternetState();
+  @override
+  List<Object> get props => [];
+}
+
+class ErrorState extends UserProfileState{
+  const ErrorState();
+  @override
+  List<Object> get props => [];
+}
