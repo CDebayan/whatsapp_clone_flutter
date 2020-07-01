@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:whatsappcloneflutter/models/contact_list_model.dart';
 import 'package:whatsappcloneflutter/models/general_response.dart';
 import 'package:whatsappcloneflutter/models/login_model.dart';
@@ -27,7 +27,7 @@ class DioServices {
       var response = await DioClient.postCall('user/login', formData: formData);
       return LoginModel.fromJson(response);
     } on DioError catch (e) {
-      GeneralError generalError = error(e);
+      GeneralError generalError =await  error(e);
       return LoginModel(
           status: generalError.status, message: generalError.message);
     }
@@ -39,7 +39,7 @@ class DioServices {
           bodyData: {'contactList': contactList});
       return UserListModel.fromJson(response);
     } on DioError catch (e) {
-      GeneralError generalError = error(e);
+      GeneralError generalError =await  error(e);
       if(generalError.status == "401"){
         var response = await getUserList(contactList);
         return response;
@@ -53,12 +53,29 @@ class DioServices {
       var response = await DioClient.getCall('user/userDetails');
       return UserDetailsModel.fromJson(response);
     } on DioError catch (e) {
-      GeneralError generalError = error(e);
-      if(generalError.status == "401"){
+      GeneralError generalError = await error(e);
+      if(generalError.statusCode == 401){
         var response = await getUserDetails();
         return response;
       }
       return UserDetailsModel(status: generalError.status, message: generalError.message);
+    }
+  }
+
+  static Future<GeneralResponse> updateName(String name) async {
+    try {
+      FormData formData = FormData.fromMap({
+        "name": name,
+      });
+      var response = await DioClient.patchCall('user/updateName',formData: formData);
+      return GeneralResponse.fromJson(response);
+    } on DioError catch (e) {
+      GeneralError generalError = await error(e);
+      if(generalError.statusCode == 401){
+        var response = await updateName(name);
+        return response;
+      }
+      return GeneralResponse(status: generalError.status, message: generalError.message);
     }
   }
 

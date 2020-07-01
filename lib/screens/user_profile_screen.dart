@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:whatsappcloneflutter/blocs/user_profile_bloc/user_profile_bloc.dart';
+import 'package:whatsappcloneflutter/blocs/user_profile_bloc/user_profile_event.dart';
 import 'package:whatsappcloneflutter/blocs/user_profile_bloc/user_profile_state.dart';
 import 'package:whatsappcloneflutter/constants.dart';
 import 'package:whatsappcloneflutter/widgets/widgets.dart';
@@ -32,7 +33,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   height: 150,
                   width: 150,
                   showCamera: true,
-                  profileImage: state.userDetails.imageUrl ?? "",
+                  profileImage: state.userDetails?.imageUrl ?? "",
                 ),
               ),
               SizedBox(
@@ -52,7 +53,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     SizedBox(
                       height: 4,
                     ),
-                    Text(state.userDetails.name ?? ""),
+                    Text(state.userDetails?.name ?? ""),
                     SizedBox(
                       height: 8,
                     ),
@@ -65,7 +66,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     Icons.edit,
                     size: 20,
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    _updateNameBottomSheet();
+                  },
                 ),
               ),
               Divider(
@@ -85,7 +88,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     SizedBox(
                       height: 4,
                     ),
-                    Text(state.userDetails.about ?? ""),
+                    Text(state.userDetails?.about ?? ""),
                   ],
                 ),
                 trailing: IconButton(
@@ -114,7 +117,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       height: 4,
                     ),
                     Text(
-                        "+${state.userDetails.countryCode} ${state.userDetails.mobileNo}"),
+                        "+${state.userDetails?.countryCode} ${state.userDetails?.mobileNo}"),
                   ],
                 ),
               ),
@@ -123,6 +126,89 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         }
         return Container();
       }),
+    );
+  }
+
+  UserProfileBloc _blocInstance(){
+    return BlocProvider.of<UserProfileBloc>(context);
+  }
+
+  void _updateNameBottomSheet() {
+    final TextEditingController _controller = TextEditingController();
+    showModalBottomSheet(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(5.0),
+        ),
+      ),
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => Padding(
+        padding: EdgeInsets.only(
+            top: 24,
+            left: 24,
+            right: 24,
+            bottom: MediaQuery.of(context).viewInsets.bottom),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Text(
+              'Enter your name',
+              style: TextStyle(
+                  fontWeight: FontWeight.w500, fontSize: 16),
+            ),
+            SizedBox(
+              height: 8.0,
+            ),
+            TextField(
+              controller: _controller,
+              autofocus: true,
+            ),
+            SizedBox(
+              height: 8.0,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                InkWell(
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        "CANCEL",
+                        style: TextStyle(
+                            color: Constants.colorPrimaryDark,
+                            fontWeight: FontWeight.w400),
+                      ),
+                    )),
+                SizedBox(
+                  width: 32,
+                ),
+                InkWell(
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      _blocInstance().add(UpdateNameEvent(_controller.text.toString().trim()));
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        "SAVE",
+                        style: TextStyle(
+                            color: Constants.colorPrimaryDark,
+                            fontWeight: FontWeight.w400),
+                      ),
+                    )),
+              ],
+            ),
+            SizedBox(
+              height: 16.0,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

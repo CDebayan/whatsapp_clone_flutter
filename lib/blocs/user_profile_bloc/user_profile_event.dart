@@ -8,5 +8,11 @@ class FetchUserDetailsEvent extends UserProfileEvent{
   const FetchUserDetailsEvent();
   @override
   List<Object> get props => [];
+}
 
+class UpdateNameEvent extends UserProfileEvent{
+  final String name;
+  const UpdateNameEvent(this.name);
+  @override
+  List<Object> get props => [name];
 }

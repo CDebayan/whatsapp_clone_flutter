@@ -27,10 +27,6 @@ class DioInterceptor extends InterceptorsWrapper with Functionality{
   @override
   Future onError(DioError err) async{
     print("Error : $err");
-    if(err.response != null && err.response.statusCode != null && err.response.statusCode == 401){
-      GeneralResponse response = await DioServices.refreshToken();
-      updateAccessToken(response.message);
-    }
     return err;
   }
 }

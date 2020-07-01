@@ -17,6 +17,12 @@ class LoadingState extends UserProfileState{
   List<Object> get props => [];
 }
 
+class NameLoadingState extends UserProfileState{
+  const NameLoadingState();
+  @override
+  List<Object> get props => [];
+}
+
 class LoadedState extends UserProfileState{
   final UserDetails  userDetails;
   const LoadedState(this.userDetails);
