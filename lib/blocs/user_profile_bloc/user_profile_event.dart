@@ -4,8 +4,8 @@ abstract class UserProfileEvent extends Equatable{
   const UserProfileEvent();
 }
 
-class FetchUserDetailsEvent extends UserProfileEvent{
-  const FetchUserDetailsEvent();
+class FetchUserDetails extends UserProfileEvent{
+  const FetchUserDetails();
   @override
   List<Object> get props => [];
 }
@@ -15,4 +15,11 @@ class UpdateNameEvent extends UserProfileEvent{
   const UpdateNameEvent(this.name);
   @override
   List<Object> get props => [name];
+}
+
+class UpdateAboutEvent extends UserProfileEvent{
+  final String about;
+  const UpdateAboutEvent(this.about);
+  @override
+  List<Object> get props => [about];
 }

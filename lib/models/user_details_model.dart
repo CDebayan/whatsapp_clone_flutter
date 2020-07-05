@@ -7,7 +7,7 @@ class UserDetailsModel {
 
   UserDetailsModel.fromJson(Map<String, dynamic> json) {
     status = json['status'].toString();
-    message = json['message'].toString();
+    message = json['message'] ?? "";
     data = json['data'] != null ? new UserDetails.fromJson(json['data']) : null;
   }
 
@@ -32,11 +32,11 @@ class UserDetails {
   UserDetails({this.countryCode, this.mobileNo, this.name, this.imageUrl, this.about});
 
   UserDetails.fromJson(Map<String, dynamic> json) {
-    countryCode = json['countryCode'].toString();
-    mobileNo = json['mobileNo'].toString();
-    name = json['name'].toString();
-    imageUrl = json['imageUrl'].toString();
-    about = json['about'].toString();
+    countryCode = json['countryCode'] ?? "";
+    mobileNo = json['mobileNo'] ?? "";
+    name = json['name'] ?? "";
+    imageUrl = json['imageUrl'] ?? "";
+    about = json['about'] ?? "";
   }
 
   Map<String, dynamic> toJson() {

@@ -4,6 +4,7 @@ import 'package:whatsappcloneflutter/blocs/user_profile_bloc/user_profile_bloc.d
 import 'package:whatsappcloneflutter/blocs/user_profile_bloc/user_profile_event.dart';
 import 'package:whatsappcloneflutter/blocs/user_profile_bloc/user_profile_state.dart';
 import 'package:whatsappcloneflutter/constants.dart';
+import 'package:whatsappcloneflutter/functionality.dart';
 import 'package:whatsappcloneflutter/widgets/widgets.dart';
 
 class UserProfileScreen extends StatefulWidget {
@@ -13,7 +14,8 @@ class UserProfileScreen extends StatefulWidget {
   _UserProfileScreenState createState() => _UserProfileScreenState();
 }
 
-class _UserProfileScreenState extends State<UserProfileScreen> {
+class _UserProfileScreenState extends State<UserProfileScreen>
+    with Functionality {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,119 +24,140 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       ),
       body: BlocBuilder<UserProfileBloc, UserProfileState>(
           builder: (context, state) {
-        if (state is LoadedState) {
-          return ListView(
-            children: <Widget>[
-              SizedBox(
-                height: 24,
-              ),
-              Center(
-                child: ProfileImageView(
-                  height: 150,
-                  width: 150,
-                  showCamera: true,
-                  profileImage: state.userDetails?.imageUrl ?? "",
-                ),
-              ),
-              SizedBox(
-                height: 16,
-              ),
-              ListTile(
-                leading: Icon(
-                  Icons.person,
-                  color: Constants.colorPrimary,
-                ),
-                title: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text("Name",
-                        style: TextStyle(
-                            color: Constants.colorDefaultText, fontSize: 14)),
-                    SizedBox(
-                      height: 4,
-                    ),
-                    Text(state.userDetails?.name ?? ""),
-                    SizedBox(
-                      height: 8,
-                    ),
-                  ],
-                ),
-                subtitle: Text(
-                    "This is not your username or pin.This name will be visible to your WhatsApp contacts."),
-                trailing: IconButton(
-                  icon: Icon(
-                    Icons.edit,
-                    size: 20,
-                  ),
-                  onPressed: () {
-                    _updateNameBottomSheet();
-                  },
-                ),
-              ),
-              Divider(
-                indent: 72,
-              ),
-              ListTile(
-                leading: Icon(
-                  Icons.person,
-                  color: Constants.colorPrimary,
-                ),
-                title: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text("About",
-                        style: TextStyle(
-                            color: Constants.colorDefaultText, fontSize: 14)),
-                    SizedBox(
-                      height: 4,
-                    ),
-                    Text(state.userDetails?.about ?? ""),
-                  ],
-                ),
-                trailing: IconButton(
-                  icon: Icon(
-                    Icons.edit,
-                    size: 20,
-                  ),
-                  onPressed: () {},
-                ),
-              ),
-              Divider(
-                indent: 72,
-              ),
-              ListTile(
-                leading: Icon(
-                  Icons.phone,
-                  color: Constants.colorPrimary,
-                ),
-                title: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text("Phone",
-                        style: TextStyle(
-                            color: Constants.colorDefaultText, fontSize: 14)),
-                    SizedBox(
-                      height: 4,
-                    ),
-                    Text(
-                        "+${state.userDetails?.countryCode} ${state.userDetails?.mobileNo}"),
-                  ],
-                ),
-              ),
-            ],
+        if (state is NoInternet) {
+          return Center(
+            child: CircularProgressIndicator(),
           );
+        } else {
+          return _buildWidget(state);
         }
-        return Container();
       }),
     );
   }
 
-  UserProfileBloc _blocInstance(){
+  Widget _buildWidget(UserProfileState state) {
+    bool isImageLoading = state.isImageLoading;
+    bool isNameLoading = state.isNameLoading;
+    bool isAboutLoading = state.isAboutLoading;
+    String imageUrl = state.userDetails?.imageUrl ?? "";
+    String name = state.userDetails?.name ?? "";
+    String about = state.userDetails?.about ?? "";
+    String mobile = "";
+
+    if (isValidObject(state.userDetails)) {
+      if (isValidString(state.userDetails.countryCode) && isValidString(state.userDetails.mobileNo)) {
+        mobile = "+${state.userDetails.countryCode} ${state.userDetails.mobileNo}";
+      }
+    }
+
+    return ListView(
+      children: <Widget>[
+        SizedBox(
+          height: 24,
+        ),
+        Center(
+          child: ProfileImageView(
+            height: 150,
+            width: 150,
+            showCamera: true,
+            profileImage: imageUrl,
+          ),
+        ),
+        SizedBox(
+          height: 16,
+        ),
+        ListTile(
+          leading: Icon(
+            Icons.person,
+            color: Constants.colorPrimary,
+          ),
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text("Name",
+                  style: TextStyle(
+                      color: Constants.colorDefaultText, fontSize: 14)),
+              SizedBox(
+                height: 4,
+              ),
+              Text(name),
+              SizedBox(
+                height: 8,
+              ),
+            ],
+          ),
+          subtitle: Text(
+              "This is not your username or pin.This name will be visible to your WhatsApp contacts."),
+          trailing: IconButton(
+            icon: isNameLoading ? Progress() :Icon(
+              Icons.edit,
+              size: 20,
+            ),
+            onPressed: () {
+              _updateNameBottomSheet(name);
+            },
+          ),
+        ),
+        Divider(
+          indent: 72,
+        ),
+        ListTile(
+          leading: Icon(
+            Icons.error_outline,
+            color: Constants.colorPrimary,
+          ),
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text("About",
+                  style: TextStyle(
+                      color: Constants.colorDefaultText, fontSize: 14)),
+              SizedBox(
+                height: 4,
+              ),
+              Text(about),
+            ],
+          ),
+          trailing: IconButton(
+            icon: isAboutLoading ? Progress() :Icon(
+              Icons.edit,
+              size: 20,
+            ),
+            onPressed: () {
+            },
+          ),
+        ),
+        Divider(
+          indent: 72,
+        ),
+        ListTile(
+          leading: Icon(
+            Icons.phone,
+            color: Constants.colorPrimary,
+          ),
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text("Phone",
+                  style: TextStyle(
+                      color: Constants.colorDefaultText, fontSize: 14)),
+              SizedBox(
+                height: 4,
+              ),
+              Text(mobile),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  UserProfileBloc _blocInstance() {
     return BlocProvider.of<UserProfileBloc>(context);
   }
 
-  void _updateNameBottomSheet() {
-    final TextEditingController _controller = TextEditingController();
+  void _updateNameBottomSheet(String name) {
+    final TextEditingController _controller = TextEditingController(text: name);
     showModalBottomSheet(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
@@ -155,8 +178,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           children: <Widget>[
             Text(
               'Enter your name',
-              style: TextStyle(
-                  fontWeight: FontWeight.w500, fontSize: 16),
+              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
             ),
             SizedBox(
               height: 8.0,
@@ -189,8 +211,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 ),
                 InkWell(
                     onTap: () {
+                      String name = _controller.text.toString().trim();
                       Navigator.of(context).pop();
-                      _blocInstance().add(UpdateNameEvent(_controller.text.toString().trim()));
+                      _blocInstance().add(UpdateNameEvent(name));
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -211,4 +234,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       ),
     );
   }
+
+
 }

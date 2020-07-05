@@ -280,6 +280,28 @@ class ProfileImageView extends StatelessWidget with Functionality {
 
 ////////////////////////////////////////////////////////////////////////////////////
 
+class Progress extends StatelessWidget {
+  final double height;
+  final double width;
+
+  Progress({this.height = 20, this.width = 20});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: height,
+      width: width,
+      child: CircularProgressIndicator(
+        valueColor:
+        AlwaysStoppedAnimation<Color>(Constants.colorPrimary),
+        strokeWidth: 2,
+      ),
+    );
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////////
+
 AppBar transparentAppBar({String title = ""}) {
   return AppBar(
     centerTitle: true,

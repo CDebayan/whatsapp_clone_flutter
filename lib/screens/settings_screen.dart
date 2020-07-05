@@ -4,6 +4,7 @@ import 'package:whatsappcloneflutter/blocs/user_profile_bloc/user_profile_bloc.d
 import 'package:whatsappcloneflutter/blocs/user_profile_bloc/user_profile_event.dart';
 import 'package:whatsappcloneflutter/blocs/user_profile_bloc/user_profile_state.dart';
 import 'package:whatsappcloneflutter/constants.dart';
+import 'package:whatsappcloneflutter/functionality.dart';
 import 'package:whatsappcloneflutter/screens/user_profile_screen.dart';
 import 'package:whatsappcloneflutter/widgets/widgets.dart';
 
@@ -14,17 +15,14 @@ class SettingsScreen extends StatefulWidget {
   _SettingsScreenState createState() => _SettingsScreenState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen> {
-
+class _SettingsScreenState extends State<SettingsScreen> with Functionality {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<UserProfileBloc>(context).add(FetchUserDetailsEvent());
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         title: Text("Settings"),
@@ -39,18 +37,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
         children: <Widget>[
           BlocBuilder<UserProfileBloc, UserProfileState>(
             builder: (context, state) {
-              if (state is LoadedState) {
+              if (state is Loaded) {
                 return ListTile(
                   leading: ProfileImageView(
-                    profileImage: state.userDetails.imageUrl,
+                    profileImage: isValidString(state.userDetails?.imageUrl)
+                        ? state.userDetails?.imageUrl
+                        : "",
                   ),
-                  title: Text(state.userDetails.name),
-                  subtitle: Text(state.userDetails.about),
-                  onTap: (){
-                    Navigator.of(context).pushNamed(UserProfileScreen.routeName);
+                  title: Text(isValidString(state.userDetails?.name)
+                      ? state.userDetails?.name
+                      : ""),
+                  subtitle: Text(isValidString(state.userDetails?.about)
+                      ? state.userDetails?.about
+                      : ""),
+                  onTap: () {
+                    Navigator.of(context)
+                        .pushNamed(UserProfileScreen.routeName);
                   },
                 );
-              }else{
+              } else {
                 return ListTile(
                   leading: ProfileImageView(
                     profileImage: "",

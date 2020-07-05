@@ -62,20 +62,20 @@ class DioServices {
     }
   }
 
-  static Future<GeneralResponse> updateName(String name) async {
+  static Future<UserDetailsModel> updateName(String name) async {
     try {
       FormData formData = FormData.fromMap({
         "name": name,
       });
       var response = await DioClient.patchCall('user/updateName',formData: formData);
-      return GeneralResponse.fromJson(response);
+      return UserDetailsModel.fromJson(response);
     } on DioError catch (e) {
       GeneralError generalError = await error(e);
       if(generalError.statusCode == 401){
         var response = await updateName(name);
         return response;
       }
-      return GeneralResponse(status: generalError.status, message: generalError.message);
+      return UserDetailsModel(status: generalError.status, message: generalError.message);
     }
   }
 

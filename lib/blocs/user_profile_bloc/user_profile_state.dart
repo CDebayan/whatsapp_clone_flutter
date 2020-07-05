@@ -1,43 +1,49 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:whatsappcloneflutter/models/user_details_model.dart';
 
-abstract class UserProfileState extends Equatable{
-  const UserProfileState();
+abstract class UserProfileState extends Equatable {
+  final bool isImageLoading;
+  final bool isNameLoading;
+  final bool isAboutLoading;
+  final UserDetails userDetails;
+
+  const UserProfileState(
+    this.isImageLoading,
+    this.isNameLoading,
+    this.isAboutLoading,
+    this.userDetails,
+  );
+
+  @override
+  List<Object> get props =>
+      [isImageLoading, isNameLoading, isAboutLoading, userDetails];
 }
 
-class InitialState extends UserProfileState{
-  const InitialState();
-  @override
-  List<Object> get props => [];
+class Loading extends UserProfileState {
+  Loading({
+    bool isImageLoading = true,
+    bool isNameLoading = true,
+    bool isAboutLoading = true,
+    UserDetails userDetails,
+  }) : super(isImageLoading, isNameLoading, isAboutLoading, userDetails);
 }
 
-class LoadingState extends UserProfileState{
-  const LoadingState();
-  @override
-  List<Object> get props => [];
+class Loaded extends UserProfileState {
+  Loaded({
+    bool isImageLoading = false,
+    bool isNameLoading = false,
+    bool isAboutLoading = false,
+    @required UserDetails userDetails,
+  }) : super(isImageLoading, isNameLoading, isAboutLoading, userDetails);
 }
 
-class NameLoadingState extends UserProfileState{
-  const NameLoadingState();
-  @override
-  List<Object> get props => [];
-}
+class NoInternet extends UserProfileState {
+  NoInternet({
+    bool isImageLoading = false,
+    bool isNameLoading = false,
+    bool isAboutLoading = false,
+    UserDetails userDetails,
+  }) : super(isImageLoading, isNameLoading, isAboutLoading, userDetails);
 
-class LoadedState extends UserProfileState{
-  final UserDetails  userDetails;
-  const LoadedState(this.userDetails);
-  @override
-  List<Object> get props => [userDetails];
-}
-
-class NoInternetState extends UserProfileState{
-  const NoInternetState();
-  @override
-  List<Object> get props => [];
-}
-
-class ErrorState extends UserProfileState{
-  const ErrorState();
-  @override
-  List<Object> get props => [];
 }
