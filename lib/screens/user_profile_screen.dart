@@ -5,6 +5,7 @@ import 'package:whatsappcloneflutter/blocs/user_profile_bloc/user_profile_event.
 import 'package:whatsappcloneflutter/blocs/user_profile_bloc/user_profile_state.dart';
 import 'package:whatsappcloneflutter/constants.dart';
 import 'package:whatsappcloneflutter/functionality.dart';
+import 'package:whatsappcloneflutter/screens/about_screen.dart';
 import 'package:whatsappcloneflutter/widgets/widgets.dart';
 
 class UserProfileScreen extends StatefulWidget {
@@ -25,9 +26,7 @@ class _UserProfileScreenState extends State<UserProfileScreen>
       body: BlocBuilder<UserProfileBloc, UserProfileState>(
           builder: (context, state) {
         if (state is NoInternet) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
+          return Container();
         } else {
           return _buildWidget(state);
         }
@@ -124,6 +123,7 @@ class _UserProfileScreenState extends State<UserProfileScreen>
               size: 20,
             ),
             onPressed: () {
+              Navigator.of(context).pushNamed(AboutScreen.routeName);
             },
           ),
         ),

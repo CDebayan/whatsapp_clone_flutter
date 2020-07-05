@@ -16,6 +16,8 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState>
       yield* _mapFetchUserDetailsToState();
     } else if (event is UpdateNameEvent) {
       yield* _mapUpdateNameToState(event);
+    } else if (event is UpdateAboutEvent) {
+      yield* _mapUpdateAboutToState(event);
     }
   }
 
@@ -49,6 +51,16 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState>
     }
     yield Loading(isImageLoading: false,isNameLoading: true,isAboutLoading: false,userDetails: userDetails);
     UserDetailsModel userDetailsModel = await DioServices.updateName(event.name);
+    yield* _validateUserDetails(userDetailsModel);
+  }
+
+  Stream<UserProfileState> _mapUpdateAboutToState(UpdateAboutEvent event) async* {
+    UserDetails userDetails;
+    if (state is Loaded) {
+      userDetails = (state as Loaded).userDetails;
+    }
+    yield Loading(isImageLoading: false,isNameLoading: false,isAboutLoading: true,userDetails: userDetails);
+    UserDetailsModel userDetailsModel = await DioServices.updateAbout(event.about);
     yield* _validateUserDetails(userDetailsModel);
   }
 }
