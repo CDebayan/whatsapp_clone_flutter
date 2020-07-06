@@ -11,6 +11,7 @@ import 'package:whatsappcloneflutter/services/dio_services.dart';
 class DioClient {
   static final Dio _dio = Dio();
   static final String baseUrl = "http://192.168.0.5:4000/";
+  static final String imageBaseUrl = "http://192.168.0.5:4000/images/";
 
   static Dio _invoke() {
     _dio.interceptors.add(DioInterceptor());

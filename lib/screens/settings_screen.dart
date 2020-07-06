@@ -6,6 +6,7 @@ import 'package:whatsappcloneflutter/blocs/user_profile_bloc/user_profile_state.
 import 'package:whatsappcloneflutter/constants.dart';
 import 'package:whatsappcloneflutter/functionality.dart';
 import 'package:whatsappcloneflutter/screens/user_profile_screen.dart';
+import 'package:whatsappcloneflutter/services/dio_client.dart';
 import 'package:whatsappcloneflutter/widgets/widgets.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -32,38 +33,13 @@ class _SettingsScreenState extends State<SettingsScreen> with Functionality {
   }
 
   Widget _buildWidgets() {
+
     return SingleChildScrollView(
       child: Column(
         children: <Widget>[
           BlocBuilder<UserProfileBloc, UserProfileState>(
             builder: (context, state) {
-              if (state is Loaded) {
-                return ListTile(
-                  leading: ProfileImageView(
-                    profileImage: isValidString(state.userDetails?.imageUrl)
-                        ? state.userDetails?.imageUrl
-                        : "",
-                  ),
-                  title: Text(isValidString(state.userDetails?.name)
-                      ? state.userDetails?.name
-                      : ""),
-                  subtitle: Text(isValidString(state.userDetails?.about)
-                      ? state.userDetails?.about
-                      : ""),
-                  onTap: () {
-                    Navigator.of(context)
-                        .pushNamed(UserProfileScreen.routeName);
-                  },
-                );
-              } else {
-                return ListTile(
-                  leading: ProfileImageView(
-                    profileImage: "",
-                  ),
-                  title: Text(""),
-                  subtitle: Text(""),
-                );
-              }
+              return _buildProfileWidgets(state);
             },
           ),
           Divider(),
@@ -158,5 +134,27 @@ class _SettingsScreenState extends State<SettingsScreen> with Functionality {
         ],
       ),
     );
+  }
+
+  Widget _buildProfileWidgets(UserProfileState state) {
+    String imageUrl = state.userDetails?.imageUrl ?? "";
+    String name = state.userDetails?.name ?? "";
+    String about = state.userDetails?.about ?? "";
+
+    if(state is NoInternet){
+      return Container();
+    }else{
+      return ListTile(
+        leading: ProfileImageView(
+          profileImage: "${DioClient.imageBaseUrl}$imageUrl",
+        ),
+        title: Text(name),
+        subtitle: Text(about),
+        onTap: () {
+          Navigator.of(context)
+              .pushNamed(UserProfileScreen.routeName);
+        },
+      );
+    }
   }
 }

@@ -6,6 +6,7 @@ import 'package:whatsappcloneflutter/blocs/user_profile_bloc/user_profile_state.
 import 'package:whatsappcloneflutter/constants.dart';
 import 'package:whatsappcloneflutter/functionality.dart';
 import 'package:whatsappcloneflutter/screens/about_screen.dart';
+import 'package:whatsappcloneflutter/services/dio_client.dart';
 import 'package:whatsappcloneflutter/widgets/widgets.dart';
 
 class UserProfileScreen extends StatefulWidget {
@@ -59,7 +60,7 @@ class _UserProfileScreenState extends State<UserProfileScreen>
             height: 150,
             width: 150,
             showCamera: true,
-            profileImage: imageUrl,
+            profileImage: "${DioClient.imageBaseUrl}$imageUrl",
           ),
         ),
         SizedBox(
