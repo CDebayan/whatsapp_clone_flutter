@@ -14,10 +14,12 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState>
   Stream<UserProfileState> mapEventToState(UserProfileEvent event) async* {
     if (event is FetchUserDetails) {
       yield* _mapFetchUserDetailsToState();
-    } else if (event is UpdateNameEvent) {
+    } else if (event is UpdateName) {
       yield* _mapUpdateNameToState(event);
-    } else if (event is UpdateAboutEvent) {
+    } else if (event is UpdateAbout) {
       yield* _mapUpdateAboutToState(event);
+    } else if (event is UpdateProfileImage) {
+      yield* _mapUpdateProfileImageToState(event);
     }
   }
 
@@ -44,7 +46,7 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState>
     }
   }
 
-  Stream<UserProfileState> _mapUpdateNameToState(UpdateNameEvent event) async* {
+  Stream<UserProfileState> _mapUpdateNameToState(UpdateName event) async* {
     UserDetails userDetails;
     if (state is Loaded) {
       userDetails = (state as Loaded).userDetails;
@@ -54,13 +56,23 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState>
     yield* _validateUserDetails(userDetailsModel);
   }
 
-  Stream<UserProfileState> _mapUpdateAboutToState(UpdateAboutEvent event) async* {
+  Stream<UserProfileState> _mapUpdateAboutToState(UpdateAbout event) async* {
     UserDetails userDetails;
     if (state is Loaded) {
       userDetails = (state as Loaded).userDetails;
     }
     yield Loading(isImageLoading: false,isNameLoading: false,isAboutLoading: true,userDetails: userDetails);
     UserDetailsModel userDetailsModel = await DioServices.updateAbout(event.about);
+    yield* _validateUserDetails(userDetailsModel);
+  }
+
+  Stream<UserProfileState> _mapUpdateProfileImageToState(UpdateProfileImage event) async* {
+    UserDetails userDetails;
+    if (state is Loaded) {
+      userDetails = (state as Loaded).userDetails;
+    }
+    yield Loading(isImageLoading: false,isNameLoading: false,isAboutLoading: true,userDetails: userDetails);
+    UserDetailsModel userDetailsModel = await DioServices.updateProfileImage(event.image.path);
     yield* _validateUserDetails(userDetailsModel);
   }
 }

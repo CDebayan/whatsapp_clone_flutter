@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:whatsappcloneflutter/constants.dart';
@@ -60,6 +64,27 @@ mixin Functionality {
       return token;
     } else {
       return "";
+    }
+  }
+
+  Future<File> cropImage(File image) async {
+    File croppedFile = await ImageCropper.cropImage(
+        sourcePath: image.path,
+        compressQuality: 70,
+        androidUiSettings: AndroidUiSettings(
+            toolbarTitle: 'Crop Image',
+            toolbarColor: Colors.white,
+            toolbarWidgetColor: Colors.black,
+            initAspectRatio: CropAspectRatioPreset.original,
+            lockAspectRatio: false,
+            hideBottomControls: true),
+        iosUiSettings: IOSUiSettings(
+            rotateButtonsHidden: true, rotateClockwiseButtonHidden: true));
+
+    if (croppedFile == null) {
+      return image;
+    } else {
+      return croppedFile;
     }
   }
 }

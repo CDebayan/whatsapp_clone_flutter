@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:whatsappcloneflutter/blocs/user_profile_bloc/user_profile_bloc.dart';
 import 'package:whatsappcloneflutter/blocs/user_profile_bloc/user_profile_event.dart';
 import 'package:whatsappcloneflutter/blocs/user_profile_bloc/user_profile_state.dart';
@@ -61,6 +64,9 @@ class _UserProfileScreenState extends State<UserProfileScreen>
             width: 150,
             showCamera: true,
             profileImage: "${DioClient.imageBaseUrl}$imageUrl",
+            onTap: (){
+              _selectImageBottomSheet();
+            },
           ),
         ),
         SizedBox(
@@ -214,7 +220,7 @@ class _UserProfileScreenState extends State<UserProfileScreen>
                     onTap: () {
                       String name = _controller.text.toString().trim();
                       Navigator.of(context).pop();
-                      _blocInstance().add(UpdateNameEvent(name));
+                      _blocInstance().add(UpdateName(name));
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -234,6 +240,91 @@ class _UserProfileScreenState extends State<UserProfileScreen>
         ),
       ),
     );
+  }
+
+  void _selectImageBottomSheet() {
+    showModalBottomSheet(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(5.0),
+        ),
+      ),
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => Padding(
+        padding: EdgeInsets.only(
+            top: 24,
+            left: 24,
+            right: 24,
+            bottom: MediaQuery.of(context).viewInsets.bottom),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Text(
+              'Profile photo',
+              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+            ),
+            SizedBox(
+              height: 24,
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+              InkWell(
+                onTap: (){
+                  _updateProfileImage("remove");
+                },
+                child: Column(children: [
+                  Icon(Icons.delete),
+                  Text("Remove \n photo",style: TextStyle(color: Constants.colorDefaultText),textAlign: TextAlign.center,)
+                ],),
+              ),
+                SizedBox(
+                  width: 24,
+                ),
+              InkWell(
+                onTap: (){
+                  _updateProfileImage("gallery");
+                },
+                child: Column(children: [
+                  Icon(Icons.image),
+                  Text("Gallery",style: TextStyle(color: Constants.colorDefaultText),)
+                ],),
+              ),
+                SizedBox(
+                  width: 24,
+                ),
+              InkWell(
+                onTap: (){
+                  _updateProfileImage("camera");
+                },
+                child: Column(children: [
+                  Icon(Icons.camera),
+                  Text("Camera",style: TextStyle(color: Constants.colorDefaultText),)
+                ],),
+              ),
+            ],),
+            SizedBox(
+              height: 24,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _updateProfileImage(String type) async{
+    PickedFile image;
+    Navigator.of(context).pop();
+    if(type == "camera"){
+      image = await ImagePicker().getImage(source: ImageSource.camera);
+    }else if(type == "gallery"){
+      image = await ImagePicker().getImage(source: ImageSource.gallery);
+    }
+
+    File croppedImage = await cropImage(File(image.path));
+    _blocInstance().add(UpdateProfileImage(croppedImage));
   }
 
 

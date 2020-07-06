@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:equatable/equatable.dart';
 
 abstract class UserProfileEvent extends Equatable{
@@ -10,16 +12,23 @@ class FetchUserDetails extends UserProfileEvent{
   List<Object> get props => [];
 }
 
-class UpdateNameEvent extends UserProfileEvent{
+class UpdateName extends UserProfileEvent{
   final String name;
-  const UpdateNameEvent(this.name);
+  const UpdateName(this.name);
   @override
   List<Object> get props => [name];
 }
 
-class UpdateAboutEvent extends UserProfileEvent{
+class UpdateAbout extends UserProfileEvent{
   final String about;
-  const UpdateAboutEvent(this.about);
+  const UpdateAbout(this.about);
   @override
   List<Object> get props => [about];
+}
+
+class UpdateProfileImage extends UserProfileEvent{
+  final File image;
+  const UpdateProfileImage(this.image);
+  @override
+  List<Object> get props => [image];
 }

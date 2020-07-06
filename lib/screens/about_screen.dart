@@ -93,7 +93,7 @@ class _AboutScreenState extends State<AboutScreen> with Functionality {
             )
           : null,
       onTap: (){
-        _blocInstance().add(UpdateAboutEvent(_aboutList[index]));
+        _blocInstance().add(UpdateAbout(_aboutList[index]));
       },
     );
   }
@@ -177,7 +177,7 @@ class _AboutScreenState extends State<AboutScreen> with Functionality {
                     onTap: () {
                       String about = _controller.text.toString().trim();
                       Navigator.of(context).pop();
-                      _blocInstance().add(UpdateAboutEvent(about));
+                      _blocInstance().add(UpdateAbout(about));
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
