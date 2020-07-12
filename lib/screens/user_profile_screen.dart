@@ -273,7 +273,8 @@ class _UserProfileScreenState extends State<UserProfileScreen>
               children: [
               InkWell(
                 onTap: (){
-                  _updateProfileImage("remove");
+                  Navigator.of(context).pop();
+                  _blocInstance().add(RemoveProfileImage());
                 },
                 child: Column(children: [
                   Icon(Icons.delete),

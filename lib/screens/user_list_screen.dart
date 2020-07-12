@@ -7,6 +7,7 @@ import 'package:whatsappcloneflutter/blocs/user_list_bloc/user_list_state.dart';
 import 'package:whatsappcloneflutter/constants.dart';
 import 'package:whatsappcloneflutter/functionality.dart';
 import 'package:whatsappcloneflutter/models/user_list_model.dart';
+import 'package:whatsappcloneflutter/services/dio_client.dart';
 import 'package:whatsappcloneflutter/widgets/widgets.dart';
 
 class UserListScreen extends StatefulWidget {
@@ -35,10 +36,19 @@ class _UserListScreenState extends State<UserListScreen> with Functionality {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text("Select contact"),
-            Text(
-              "160 contacts",
+        BlocBuilder<UserListBloc, UserListState>(
+          builder: (context,state){
+          if(state is LoadedState){
+            return Text(
+              "${state.userModel.length} contacts",
               style: TextStyle(fontSize: 12),
-            )
+            );
+          } else{
+            return Container();
+          }
+          },
+        ),
+
           ],
         ),
         actions: <Widget>[
@@ -214,7 +224,7 @@ class _UserListScreenState extends State<UserListScreen> with Functionality {
   Widget _buildUserItem(UserModel userModel) {
     return ListTile(
       contentPadding: EdgeInsets.all(0),
-      leading: ProfileImageView(profileImage: userModel.profileImage),
+      leading: ProfileImageView(profileImage: "${DioClient.imageBaseUrl}${userModel.profileImage}"),
 
       title: Text(userModel.name),
       subtitle: Text(userModel.about),

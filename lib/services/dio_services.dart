@@ -114,6 +114,20 @@ class DioServices {
     }
   }
 
+  static Future<UserDetailsModel> removeProfileImage() async {
+    try {
+      var response = await DioClient.patchCall('user/removeProfileImage');
+      return UserDetailsModel.fromJson(response);
+    } on DioError catch (e) {
+      GeneralError generalError = await error(e);
+      if(generalError.statusCode == 401){
+        var response = await removeProfileImage();
+        return response;
+      }
+      return UserDetailsModel(status: generalError.status, message: generalError.message);
+    }
+  }
+
   static Future<GeneralResponse> refreshToken() async {
     var response = await DioClient.getCall('refreshToken');
     return GeneralResponse.fromJson(response);

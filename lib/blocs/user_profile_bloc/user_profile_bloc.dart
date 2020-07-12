@@ -20,6 +20,8 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState>
       yield* _mapUpdateAboutToState(event);
     } else if (event is UpdateProfileImage) {
       yield* _mapUpdateProfileImageToState(event);
+    } else if (event is RemoveProfileImage) {
+      yield* _mapRemoveProfileImageToState(event);
     }
   }
 
@@ -71,8 +73,18 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState>
     if (state is Loaded) {
       userDetails = (state as Loaded).userDetails;
     }
-    yield Loading(isImageLoading: false,isNameLoading: false,isAboutLoading: true,userDetails: userDetails);
+    yield Loading(isImageLoading: true,isNameLoading: false,isAboutLoading: false,userDetails: userDetails);
     UserDetailsModel userDetailsModel = await DioServices.updateProfileImage(event.image.path);
+    yield* _validateUserDetails(userDetailsModel);
+  }
+
+  Stream<UserProfileState> _mapRemoveProfileImageToState(RemoveProfileImage event) async* {
+    UserDetails userDetails;
+    if (state is Loaded) {
+      userDetails = (state as Loaded).userDetails;
+    }
+    yield Loading(isImageLoading: true,isNameLoading: false,isAboutLoading: false,userDetails: userDetails);
+    UserDetailsModel userDetailsModel = await DioServices.removeProfileImage();
     yield* _validateUserDetails(userDetailsModel);
   }
 }

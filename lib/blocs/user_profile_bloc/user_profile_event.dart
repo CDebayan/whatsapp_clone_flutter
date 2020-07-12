@@ -32,3 +32,9 @@ class UpdateProfileImage extends UserProfileEvent{
   @override
   List<Object> get props => [image];
 }
+
+class RemoveProfileImage extends UserProfileEvent{
+  const RemoveProfileImage();
+  @override
+  List<Object> get props => [];
+}
