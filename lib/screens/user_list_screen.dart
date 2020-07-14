@@ -7,6 +7,7 @@ import 'package:whatsappcloneflutter/blocs/user_list_bloc/user_list_state.dart';
 import 'package:whatsappcloneflutter/constants.dart';
 import 'package:whatsappcloneflutter/functionality.dart';
 import 'package:whatsappcloneflutter/models/user_list_model.dart';
+import 'package:whatsappcloneflutter/screens/chat_screen.dart';
 import 'package:whatsappcloneflutter/services/dio_client.dart';
 import 'package:whatsappcloneflutter/widgets/widgets.dart';
 
@@ -225,9 +226,11 @@ class _UserListScreenState extends State<UserListScreen> with Functionality {
     return ListTile(
       contentPadding: EdgeInsets.all(0),
       leading: ProfileImageView(profileImage: "${DioClient.imageBaseUrl}${userModel.profileImage}"),
-
-      title: Text(userModel.name),
-      subtitle: Text(userModel.about),
+      title: Text(userModel.name ?? ""),
+      subtitle: Text(userModel.about ?? ""),
+      onTap: (){
+        Navigator.of(context).pushNamed(ChatScreen.routeName);
+      },
     );
   }
 

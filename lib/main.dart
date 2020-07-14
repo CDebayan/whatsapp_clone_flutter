@@ -6,6 +6,7 @@ import 'package:whatsappcloneflutter/blocs/user_profile_bloc/user_profile_bloc.d
 import 'package:whatsappcloneflutter/blocs/user_profile_bloc/user_profile_event.dart';
 import 'package:whatsappcloneflutter/constants.dart';
 import 'package:whatsappcloneflutter/screens/about_screen.dart';
+import 'package:whatsappcloneflutter/screens/chat_screen.dart';
 import 'package:whatsappcloneflutter/screens/dashboard_screen.dart';
 import 'package:whatsappcloneflutter/screens/login_screen.dart';
 import 'package:whatsappcloneflutter/screens/settings_screen.dart';
@@ -51,6 +52,7 @@ class MyApp extends StatelessWidget {
           SettingsScreen.routeName: (context) => SettingsScreen(),
           UserProfileScreen.routeName: (context) => UserProfileScreen(),
           AboutScreen.routeName: (context) => AboutScreen(),
+          ChatScreen.routeName: (context) => ChatScreen(),
         },
       ),
     );

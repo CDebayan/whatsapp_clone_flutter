@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:whatsappcloneflutter/constants.dart';
-import 'package:whatsappcloneflutter/screens/chat_screen.dart';
+import 'package:whatsappcloneflutter/screens/chat_list_screen.dart';
 import 'package:whatsappcloneflutter/screens/settings_screen.dart';
 import 'package:whatsappcloneflutter/screens/user_list_screen.dart';
 
@@ -86,7 +86,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         body: SafeArea(
           child: TabBarView(children: <Widget>[
             Text("data"),
-            ChatScreen(),
+            ChatListScreen(),
             Text("data"),
             Text("data"),
           ]),
