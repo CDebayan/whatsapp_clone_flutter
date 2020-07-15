@@ -1,12 +1,13 @@
-import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:whatsappcloneflutter/blocs/chat_bloc/chat_bloc.dart';
-import 'package:whatsappcloneflutter/blocs/chat_bloc/chat_event.dart';
-import 'package:whatsappcloneflutter/blocs/chat_bloc/chat_state.dart';
+import 'package:whatsappcloneflutter/blocs/chat_list_bloc/chat_list_bloc.dart';
+import 'package:whatsappcloneflutter/blocs/chat_list_bloc/chat_list_state.dart';
 import 'package:whatsappcloneflutter/constants.dart';
+import 'package:whatsappcloneflutter/functionality.dart';
+import 'package:whatsappcloneflutter/models/chat_list_model.dart';
+import 'package:whatsappcloneflutter/services/dio_client.dart';
 import 'package:whatsappcloneflutter/widgets/widgets.dart';
 
 class ChatListScreen extends StatefulWidget {
@@ -14,66 +15,68 @@ class ChatListScreen extends StatefulWidget {
   _ChatListScreenState createState() => _ChatListScreenState();
 }
 
-class _ChatListScreenState extends State<ChatListScreen> {
-  ChatBloc _chatBloc;
-
+class _ChatListScreenState extends State<ChatListScreen> with Functionality {
   @override
   void initState() {
     super.initState();
-    _chatBloc = ChatBloc();
-    _checkPermission();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder(
-        bloc: _chatBloc,
-        builder: (context, state) {
-          if (state is RequiredPermissionState) {
-            return _requiredPermissionWidget();
-          } else if (state is PermissionGrantedState) {
-            return _buildWidgets();
-          }
-          return Container();
-        });
+    return BlocBuilder<ChatListBloc, ChatListState>(builder: (context, state) {
+      if (state is RequiredPermission) {
+        return _requiredPermissionWidget();
+      } else if (state is LoadedChatList) {
+        return _buildWidgets(state);
+      }
+      return Container();
+    });
   }
 
-  Widget _buildWidgets() {
-    return Stack(
-      children: <Widget>[
-        Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: Container(
-              padding: EdgeInsets.only(left: 40),
-              height: 90,
-              color: Constants.colorLightGrey,
-              child: Row(
-                children: <Widget>[
-                  Text(
-                    "Start a chat",
-                    style: TextStyle(
-                        fontSize: 20, color: Constants.colorPrimaryDark),
-                  ),
-                  SizedBox(
-                    width: 8,
-                  ),
-                  Icon(
-                    Icons.arrow_forward,
-                    color: Constants.colorPrimaryDark,
-                  )
-                ],
-              ),
-            )),
-        Center(
-          child: Text(
-            "You have 160 contacts on WhatsApp",
-            style: TextStyle(color: Constants.colorDefaultText),
+  Widget _buildWidgets(LoadedChatList state) {
+    if (isValidList(state.chatList)) {
+      return ListView.builder(
+          itemCount: 30,
+          itemBuilder: (context, index) {
+            return _buildChatItem(state.chatList[0]);
+          });
+    } else {
+      return Stack(
+        children: <Widget>[
+          Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Container(
+                padding: EdgeInsets.only(left: 40),
+                height: 90,
+                color: Constants.colorLightGrey,
+                child: Row(
+                  children: <Widget>[
+                    Text(
+                      "Start a chat",
+                      style: TextStyle(
+                          fontSize: 20, color: Constants.colorPrimaryDark),
+                    ),
+                    SizedBox(
+                      width: 8,
+                    ),
+                    Icon(
+                      Icons.arrow_forward,
+                      color: Constants.colorPrimaryDark,
+                    )
+                  ],
+                ),
+              )),
+          Center(
+            child: Text(
+              "You have 160 contacts on WhatsApp",
+              style: TextStyle(color: Constants.colorDefaultText),
+            ),
           ),
-        ),
-      ],
-    );
+        ],
+      );
+    }
   }
 
   Widget _requiredPermissionWidget() {
@@ -112,15 +115,38 @@ class _ChatListScreenState extends State<ChatListScreen> {
     );
   }
 
-  void _checkPermission() async {
-    PermissionStatus status = await Permission.contacts.status;
-    _chatBloc.add(PermissionEvent(status));
+  Widget _buildChatItem(ChatList chatList) {
+    String imageUrl = "";
+    String userName = "";
+    String message = "";
+    String time = "";
+
+    if (isValidObject(chatList)) {
+      if (isValidString(chatList.message)) {
+        message = chatList.message;
+      }
+      if (isValidString(chatList.updatedAt)) {
+        time = chatList.updatedAt;
+      }
+      if (isValidObject(chatList.user)) {
+        if (isValidString(chatList.user.name)) {
+          userName = chatList.user.name;
+        }
+        if (isValidString(chatList.user.imageUrl)) {
+          imageUrl = "${DioClient.imageBaseUrl}${chatList.user.imageUrl}";
+        }
+      }
+    }
+
+    return ListTile(
+      leading: ProfileImageView(profileImage: imageUrl),
+      title: Text(userName),
+      subtitle: Text(message),
+    );
   }
 
   @override
   void dispose() {
     super.dispose();
-    _chatBloc.close();
   }
-
 }

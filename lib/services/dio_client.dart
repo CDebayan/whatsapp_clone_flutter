@@ -9,12 +9,15 @@ import 'package:whatsappcloneflutter/services/dio_interceptor.dart';
 import 'package:whatsappcloneflutter/services/dio_services.dart';
 
 class DioClient {
-  static final Dio _dio = Dio();
+  static Dio _dio;
   static final String baseUrl = "http://192.168.0.5:4000/";
   static final String imageBaseUrl = "http://192.168.0.5:4000/images/";
 
   static Dio _invoke() {
-    _dio.interceptors.add(DioInterceptor());
+    if (_dio == null) {
+      _dio = Dio();
+      _dio.interceptors.add(DioInterceptor());
+    }
     return _dio;
   }
 
@@ -118,16 +121,10 @@ Future<GeneralError> error(DioError e) async {
   } else if (e.error is FormatException) {
     return GeneralError(status: "error", message: "Format Exception");
   } else if (e.type is DioErrorType) {
-    if (e.response != null &&
-        e.response.statusCode != null &&
-        e.response.statusCode == 401) {
-      GeneralResponse response = await DioServices.refreshToken();
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setString(Constants.accessToken, response.message);
+    if (e.response != null && e.response.statusCode != null && e.response.statusCode == 401) {
       return GeneralError(statusCode: e.response.statusCode);
     }
-    return GeneralError(
-        statusCode: e.response.statusCode, status: "error", message: e.message);
+    return GeneralError(statusCode: e.response.statusCode, status: "error", message: e.message);
   }
   return GeneralError(status: "error", message: "Something went wrong");
 }

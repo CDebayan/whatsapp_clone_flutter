@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:whatsappcloneflutter/models/chat_list_model.dart';
 import 'package:whatsappcloneflutter/models/contact_list_model.dart';
 import 'package:whatsappcloneflutter/models/general_response.dart';
 import 'package:whatsappcloneflutter/models/login_model.dart';
@@ -131,5 +132,19 @@ class DioServices {
   static Future<GeneralResponse> refreshToken() async {
     var response = await DioClient.getCall('refreshToken');
     return GeneralResponse.fromJson(response);
+  }
+
+  static Future<ChatListModel> chatList() async {
+    try {
+      var response = await DioClient.getCall('chat/chatList');
+      return ChatListModel.fromJson(response);
+    } on DioError catch (e) {
+      GeneralError generalError = await error(e);
+      if(generalError.statusCode == 401){
+        var response = await chatList();
+        return response;
+      }
+      return ChatListModel(status: generalError.status, message: generalError.message);
+    }
   }
 }

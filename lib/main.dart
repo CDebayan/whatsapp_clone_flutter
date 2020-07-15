@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
+import 'package:whatsappcloneflutter/blocs/chat_list_bloc/chat_list_bloc.dart';
+import 'package:whatsappcloneflutter/blocs/chat_list_bloc/chat_list_event.dart';
 import 'package:whatsappcloneflutter/blocs/user_list_bloc/user_list_bloc.dart';
 import 'package:whatsappcloneflutter/blocs/user_profile_bloc/user_profile_bloc.dart';
 import 'package:whatsappcloneflutter/blocs/user_profile_bloc/user_profile_event.dart';
@@ -31,6 +33,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<UserProfileBloc>(
           create: (BuildContext context) => UserProfileBloc()..add(FetchUserDetails()),
+        ),
+        BlocProvider<ChatListBloc>(
+          create: (BuildContext context) => ChatListBloc()..add(FetchChatList()),
         ),
       ],
       child: MaterialApp(

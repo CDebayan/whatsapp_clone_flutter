@@ -1,10 +1,12 @@
 import 'package:dio/dio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:whatsappcloneflutter/constants.dart';
 import 'package:whatsappcloneflutter/functionality.dart';
 import 'package:whatsappcloneflutter/models/general_response.dart';
 import 'package:whatsappcloneflutter/services/dio_client.dart';
 import 'package:whatsappcloneflutter/services/dio_services.dart';
 
-class DioInterceptor extends InterceptorsWrapper with Functionality{
+class DioInterceptor extends Interceptor  with Functionality{
   @override
   Future onRequest(RequestOptions options) async{
     String accessToken = await getAccessToken();
@@ -27,6 +29,11 @@ class DioInterceptor extends InterceptorsWrapper with Functionality{
   @override
   Future onError(DioError err) async{
     print("Error : $err");
+    if(isValidObject(err.response) && isValidObject(err.response.statusCode) && err.response.statusCode == 401){
+      GeneralResponse response = await DioServices.refreshToken();
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString(Constants.accessToken, response.message);
+    }
     return err;
   }
 }
