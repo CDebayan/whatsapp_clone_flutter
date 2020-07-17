@@ -3,14 +3,14 @@ class ChatListModel {
   String message;
   List<ChatList> chatList;
 
-  ChatListModel({this.status, this.message});
+  ChatListModel({this.status, this.message, this.chatList});
 
   ChatListModel.fromJson(Map<String, dynamic> json) {
     status = json['status'].toString();
-    message = json['message'].toString();
-    if (json['message'] != null) {
+    message = json['message'] ?? "";
+    if (json['chatList'] != null) {
       chatList = new List<ChatList>();
-      json['message'].forEach((v) {
+      json['chatList'].forEach((v) {
         chatList.add(new ChatList.fromJson(v));
       });
     }
@@ -19,6 +19,7 @@ class ChatListModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this.status;
+    data['message'] = this.message;
     if (this.chatList != null) {
       data['chatList'] = this.chatList.map((v) => v.toJson()).toList();
     }
@@ -27,20 +28,43 @@ class ChatListModel {
 }
 
 class ChatList {
+  Chat chat;
+  UserData userData;
+
+  ChatList({this.chat, this.userData});
+
+  ChatList.fromJson(Map<String, dynamic> json) {
+    chat = json['chat'] != null ? new Chat.fromJson(json['chat']) : null;
+    userData = json['userData'] != null
+        ? new UserData.fromJson(json['userData'])
+        : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.chat != null) {
+      data['chat'] = this.chat.toJson();
+    }
+    if (this.userData != null) {
+      data['userData'] = this.userData.toJson();
+    }
+    return data;
+  }
+}
+
+class Chat {
   int chatId;
   String message;
   String receipt;
   String updatedAt;
-  User user;
 
-  ChatList({this.chatId, this.message, this.receipt, this.updatedAt, this.user});
+  Chat({this.chatId, this.message, this.receipt, this.updatedAt});
 
-  ChatList.fromJson(Map<String, dynamic> json) {
+  Chat.fromJson(Map<String, dynamic> json) {
     chatId = json['chatId'];
-    message = json['message'];
-    receipt = json['receipt'];
-    updatedAt = json['updatedAt'];
-    user = json['user'] != null ? new User.fromJson(json['user']) : null;
+    message = json['message'] ?? "";
+    receipt = json['receipt'] ?? "";
+    updatedAt = json['updatedAt'] ?? "";
   }
 
   Map<String, dynamic> toJson() {
@@ -49,31 +73,25 @@ class ChatList {
     data['message'] = this.message;
     data['receipt'] = this.receipt;
     data['updatedAt'] = this.updatedAt;
-    if (this.user != null) {
-      data['user'] = this.user.toJson();
-    }
     return data;
   }
 }
 
-class User {
-  int userId;
-  String imageUrl;
+class UserData {
   String name;
+  String imageUrl;
 
-  User({this.userId, this.imageUrl, this.name});
+  UserData({this.name, this.imageUrl});
 
-  User.fromJson(Map<String, dynamic> json) {
-    userId = json['userId'];
-    imageUrl = json['imageUrl'];
-    name = json['name'];
+  UserData.fromJson(Map<String, dynamic> json) {
+    name = json['name'] ?? "";
+    imageUrl = json['imageUrl'] ?? "";
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['userId'] = this.userId;
-    data['imageUrl'] = this.imageUrl;
     data['name'] = this.name;
+    data['imageUrl'] = this.imageUrl;
     return data;
   }
 }

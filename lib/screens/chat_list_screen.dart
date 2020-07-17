@@ -7,6 +7,7 @@ import 'package:whatsappcloneflutter/blocs/chat_list_bloc/chat_list_state.dart';
 import 'package:whatsappcloneflutter/constants.dart';
 import 'package:whatsappcloneflutter/functionality.dart';
 import 'package:whatsappcloneflutter/models/chat_list_model.dart';
+import 'package:whatsappcloneflutter/screens/chat_screen.dart';
 import 'package:whatsappcloneflutter/services/dio_client.dart';
 import 'package:whatsappcloneflutter/widgets/widgets.dart';
 
@@ -36,9 +37,10 @@ class _ChatListScreenState extends State<ChatListScreen> with Functionality {
   Widget _buildWidgets(LoadedChatList state) {
     if (isValidList(state.chatList)) {
       return ListView.builder(
-          itemCount: 30,
+          itemCount: state.chatList.length,
+          padding: EdgeInsets.only(bottom: 100),
           itemBuilder: (context, index) {
-            return _buildChatItem(state.chatList[0]);
+            return _buildChatItem(state.chatList[index]);
           });
     } else {
       return Stack(
@@ -122,18 +124,20 @@ class _ChatListScreenState extends State<ChatListScreen> with Functionality {
     String time = "";
 
     if (isValidObject(chatList)) {
-      if (isValidString(chatList.message)) {
-        message = chatList.message;
-      }
-      if (isValidString(chatList.updatedAt)) {
-        time = chatList.updatedAt;
-      }
-      if (isValidObject(chatList.user)) {
-        if (isValidString(chatList.user.name)) {
-          userName = chatList.user.name;
+      if (isValidObject(chatList.chat)) {
+        if (isValidString(chatList.chat.message)) {
+                message = chatList.chat.message;
+              }
+        if (isValidString(chatList.chat.updatedAt)) {
+          time = convertTime(chatList.chat.updatedAt);
         }
-        if (isValidString(chatList.user.imageUrl)) {
-          imageUrl = "${DioClient.imageBaseUrl}${chatList.user.imageUrl}";
+      }
+      if (isValidObject(chatList.userData)) {
+        if (isValidString(chatList.userData.name)) {
+          userName = chatList.userData.name;
+        }
+        if (isValidString(chatList.userData.imageUrl)) {
+          imageUrl = "${DioClient.imageBaseUrl}${chatList.userData.imageUrl}";
         }
       }
     }
@@ -142,6 +146,10 @@ class _ChatListScreenState extends State<ChatListScreen> with Functionality {
       leading: ProfileImageView(profileImage: imageUrl),
       title: Text(userName),
       subtitle: Text(message),
+      trailing: Text(time),
+      onTap: (){
+        Navigator.of(context).pushNamed(ChatScreen.routeName);
+      },
     );
   }
 

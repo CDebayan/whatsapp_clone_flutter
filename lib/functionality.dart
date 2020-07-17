@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:whatsappcloneflutter/constants.dart';
@@ -85,6 +86,14 @@ mixin Functionality {
       return image;
     } else {
       return croppedFile;
+    }
+  }
+
+  String convertTime(String time) {
+    if (isValidString(time)) {
+      return DateFormat('hh:mm').format(DateTime.parse(time));
+    }else{
+      return "";
     }
   }
 }

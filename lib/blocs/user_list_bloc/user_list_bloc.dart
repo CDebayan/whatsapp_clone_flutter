@@ -8,14 +8,15 @@ import 'package:whatsappcloneflutter/models/contact_list_model.dart';
 import 'package:whatsappcloneflutter/models/user_list_model.dart';
 import 'package:whatsappcloneflutter/services/dio_services.dart';
 
-class UserListBloc extends Bloc<UserListEvent,UserListState> with Functionality{
+class UserListBloc extends Bloc<UserListEvent, UserListState>
+    with Functionality {
   @override
   UserListState get initialState => InitialState();
 
   @override
-  Stream<UserListState> mapEventToState(UserListEvent event) async*{
-    if(event is PermissionEvent){
-      if(event.permissionStatus == PermissionStatus.granted){
+  Stream<UserListState> mapEventToState(UserListEvent event) async* {
+    if (event is PermissionEvent) {
+      if (event.permissionStatus == PermissionStatus.granted) {
         yield LoadingState();
         Iterable<Contact> contactList = await ContactsService.getContacts(
             withThumbnails: false,
@@ -24,17 +25,19 @@ class UserListBloc extends Bloc<UserListEvent,UserListState> with Functionality{
             iOSLocalizedLabels: false);
 
         List<ContactListModel> list = List();
-        for(var item in contactList){
-          if(isValidObject(item)){
+        for (var item in contactList) {
+          if (isValidObject(item)) {
             String displayName = "";
             if (isValidString(item.displayName)) {
               displayName = item.displayName;
             }
-            if(isValidList(item.phones.toList())){
+            if (isValidList(item.phones.toList())) {
               for (var item in item.phones.toList()) {
-                if(isValidString(item.value)){
-                  var replacedMobile = item.value.replaceAll(" ", "").replaceAll("+", "");
-                  list.add(ContactListModel(name: displayName,mobile: replacedMobile));
+                if (isValidString(item.value)) {
+                  var replacedMobile =
+                      item.value.replaceAll(" ", "").replaceAll("+", "");
+                  list.add(ContactListModel(
+                      name: displayName, mobile: replacedMobile));
                 }
               }
             }
@@ -42,21 +45,16 @@ class UserListBloc extends Bloc<UserListEvent,UserListState> with Functionality{
         }
 
         UserListModel response = await DioServices.getUserList(list);
-        if(isValidObject(response) && isValidString(response.status) && response.status == "1"){
-          if (isValidList(response.userModel)) {
-            yield LoadedState(response.userModel);
-          }else{
-            yield LoadedState(null);
-          }
-        }else{
+        if (isValidObject(response) &&
+            isValidString(response.status) &&
+            response.status == "1") {
+          yield LoadedState(response.userModel);
+        } else {
           yield LoadedState(null);
         }
-      }else{
+      } else {
         yield RequiredPermissionState();
       }
-
     }
-
   }
-
 }

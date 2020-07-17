@@ -41,7 +41,7 @@ class _UserListScreenState extends State<UserListScreen> with Functionality {
           builder: (context,state){
           if(state is LoadedState){
             return Text(
-              "${state.userModel.length} contacts",
+              "${state.userModel?.length ?? 0} contacts",
               style: TextStyle(fontSize: 12),
             );
           } else{
