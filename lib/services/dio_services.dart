@@ -5,6 +5,7 @@ import 'package:whatsappcloneflutter/models/chat_list_model.dart';
 import 'package:whatsappcloneflutter/models/contact_list_model.dart';
 import 'package:whatsappcloneflutter/models/general_response.dart';
 import 'package:whatsappcloneflutter/models/login_model.dart';
+import 'package:whatsappcloneflutter/models/user_chat_model.dart';
 import 'package:whatsappcloneflutter/models/user_details_model.dart';
 import 'package:whatsappcloneflutter/models/user_list_model.dart';
 import 'package:path/path.dart';
@@ -145,6 +146,20 @@ class DioServices {
         return response;
       }
       return ChatListModel(status: generalError.status, message: generalError.message);
+    }
+  }
+
+  static Future<UserChatModel> userChat(int userId) async {
+    try {
+      var response = await DioClient.getCall('chat/userChat/$userId');
+      return UserChatModel.fromJson(response);
+    } on DioError catch (e) {
+      GeneralError generalError = await error(e);
+      if(generalError.statusCode == 401){
+        var response = await userChat(userId);
+        return response;
+      }
+      return UserChatModel(status: generalError.status, message: generalError.message);
     }
   }
 }

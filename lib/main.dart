@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
+import 'package:whatsappcloneflutter/blocs/chat_bloc/chat_bloc.dart';
 import 'package:whatsappcloneflutter/blocs/chat_list_bloc/chat_list_bloc.dart';
 import 'package:whatsappcloneflutter/blocs/chat_list_bloc/chat_list_event.dart';
 import 'package:whatsappcloneflutter/blocs/user_list_bloc/user_list_bloc.dart';
 import 'package:whatsappcloneflutter/blocs/user_profile_bloc/user_profile_bloc.dart';
 import 'package:whatsappcloneflutter/blocs/user_profile_bloc/user_profile_event.dart';
 import 'package:whatsappcloneflutter/constants.dart';
+import 'package:whatsappcloneflutter/models/chat_list_model.dart';
 import 'package:whatsappcloneflutter/screens/about_screen.dart';
 import 'package:whatsappcloneflutter/screens/chat_screen.dart';
 import 'package:whatsappcloneflutter/screens/dashboard_screen.dart';
@@ -32,10 +34,15 @@ class MyApp extends StatelessWidget {
           create: (BuildContext context) => UserListBloc(),
         ),
         BlocProvider<UserProfileBloc>(
-          create: (BuildContext context) => UserProfileBloc()..add(FetchUserDetails()),
+          create: (BuildContext context) =>
+              UserProfileBloc()..add(FetchUserDetails()),
         ),
         BlocProvider<ChatListBloc>(
-          create: (BuildContext context) => ChatListBloc()..add(FetchChatList()),
+          create: (BuildContext context) =>
+              ChatListBloc()..add(FetchChatList()),
+        ),
+        BlocProvider<ChatBloc>(
+          create: (BuildContext context) => ChatBloc(),
         ),
       ],
       child: MaterialApp(
@@ -57,7 +64,15 @@ class MyApp extends StatelessWidget {
           SettingsScreen.routeName: (context) => SettingsScreen(),
           UserProfileScreen.routeName: (context) => UserProfileScreen(),
           AboutScreen.routeName: (context) => AboutScreen(),
-          ChatScreen.routeName: (context) => ChatScreen(),
+        },
+        onGenerateRoute: (settings) {
+          if (settings.name == ChatScreen.routeName) {
+            final args = settings.arguments;
+            return MaterialPageRoute(builder: (_){
+              return ChatScreen(args);
+            });
+          }
+          return null;
         },
       ),
     );

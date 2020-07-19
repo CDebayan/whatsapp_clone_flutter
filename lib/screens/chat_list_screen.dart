@@ -119,6 +119,7 @@ class _ChatListScreenState extends State<ChatListScreen> with Functionality {
 
   Widget _buildChatItem(ChatList chatList) {
     String imageUrl = "";
+    int userId;
     String userName = "";
     String message = "";
     String time = "";
@@ -133,6 +134,9 @@ class _ChatListScreenState extends State<ChatListScreen> with Functionality {
         }
       }
       if (isValidObject(chatList.userData)) {
+        if (isValidObject(chatList.userData.userId)) {
+          userId = chatList.userData.userId;
+        }
         if (isValidString(chatList.userData.name)) {
           userName = chatList.userData.name;
         }
@@ -148,7 +152,7 @@ class _ChatListScreenState extends State<ChatListScreen> with Functionality {
       subtitle: Text(message),
       trailing: Text(time),
       onTap: (){
-        Navigator.of(context).pushNamed(ChatScreen.routeName);
+        Navigator.of(context).pushNamed(ChatScreen.routeName,arguments: chatList.userData);
       },
     );
   }
