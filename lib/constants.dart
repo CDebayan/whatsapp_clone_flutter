@@ -9,6 +9,7 @@ class Constants {
 
   //region image name
   static const String welcome = "images/welcome.png";
+  static const String chatBackground = "images/chat_background.png";
 
 //endregion
 
@@ -18,6 +19,7 @@ class Constants {
   //region color name
   static const Color colorPrimary = Color(0xff2bb140);
   static const Color colorPrimaryDark = Color(0xff128C7E);
+  static const Color colorLightGreen = Color(0xffDCF8C6);
   static const Color colorDefaultText = Color(0xff757575);
   static const Color colorLightGrey = Color(0xffF7F7F7);
   static const Color colorBlue = Color(0xff34B7F1);

@@ -14,6 +14,7 @@ import 'package:whatsappcloneflutter/widgets/widgets.dart';
 class ChatScreen extends StatefulWidget {
   static const String routeName = "ChatScreen";
   UserData userData;
+
   ChatScreen(this.userData);
 
   @override
@@ -22,15 +23,16 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> with Functionality {
   ChatBloc _chatBloc;
+
   @override
   void initState() {
     super.initState();
     _chatBloc = BlocProvider.of<ChatBloc>(context);
-    if (isValidObject(widget.userData) && isValidObject(widget.userData.userId)) {
+    if (isValidObject(widget.userData) &&
+        isValidObject(widget.userData.userId)) {
       _chatBloc.add(FetchUserChat(widget.userData.userId));
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -66,9 +68,20 @@ class _ChatScreenState extends State<ChatScreen> with Functionality {
           IconButton(icon: Icon(Icons.more_vert), onPressed: () {}),
         ],
       ),
-      body: Column(
+      body: Stack(
         children: [
-          _buildChatList(),
+          Container(
+              width: double.infinity,
+              height: double.infinity,
+              child: Image.asset(
+                Constants.chatBackground,
+                fit: BoxFit.fill,
+              )),
+          Column(
+            children: [
+              _buildChatList(),
+            ],
+          ),
         ],
       ),
     );
@@ -79,6 +92,7 @@ class _ChatScreenState extends State<ChatScreen> with Functionality {
       child: BlocBuilder<ChatBloc, ChatState>(builder: (context, state) {
         if (isValidList(state.chatList)) {
           return ListView.builder(
+              padding: EdgeInsets.all(8),
               itemCount: state.chatList.length,
               itemBuilder: (context, index) {
                 UserChatList chatItem = state.chatList[index];
@@ -112,22 +126,40 @@ class _ChatScreenState extends State<ChatScreen> with Functionality {
         user = "other";
       }
     }
-    return Container(
-      color: Colors.red,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Text(message),
-            SizedBox(
-              width: 8,
+    return Align(
+      alignment: user == "me" ? Alignment(1, 0) : Alignment(-1, 0),
+      child: Container(
+        margin: user == "me"
+            ? EdgeInsets.only(left: 50, bottom: 16)
+            : EdgeInsets.only(right: 50, bottom: 16),
+        child: ClipRRect(
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(5),
+            topRight: user == "me" ? Radius.circular(0) : Radius.circular(5),
+            topLeft: user == "me" ? Radius.circular(5) : Radius.circular(0),
+            bottomRight: Radius.circular(5),
+          ),
+          child: Container(
+            padding: EdgeInsets.only(top: 4, bottom: 5, left: 8, right: 8),
+            color: user == "me" ? Constants.colorLightGreen : Colors.white,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Flexible(
+                  child: Text(message),
+                ),
+                SizedBox(
+                  width: 8,
+                ),
+                Text(
+                  time,
+                  style: TextStyle(
+                      fontSize: 10, color: Constants.colorDefaultText),
+                ),
+              ],
             ),
-            Text(
-              time,
-              style: TextStyle(fontSize: 10, color: Constants.colorDefaultText),
-            ),
-          ],
+          ),
         ),
       ),
     );
